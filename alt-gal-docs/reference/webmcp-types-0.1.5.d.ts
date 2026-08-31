@@ -1,0 +1,170 @@
+/**
+ * The WebMCP API enables web apps to provide JavaScript-based tools to AI agents.
+ */
+declare namespace WebMCP {
+    /**
+     * Value that may be returned synchronously or via Promise.
+     */
+    type MaybePromise<T> = T | Promise<T>;
+
+    /**
+     * Options passed to a tool's execute callback when the tool is executed.
+     */
+    interface ToolExecuteCallbackOptions {
+        /**
+         * An AbortSignal that communicates when the execution of the tool has been cancelled.
+         */
+        signal: AbortSignal;
+    }
+
+    /**
+     * Callback for tool execution.
+     * @param inputObject The input parameters for the tool, as defined by its inputSchema.
+     * @param options Options passed when executing the tool.
+     * @returns A promise that resolves with the tool's output.
+     */
+    type ToolExecuteCallback<T extends Record<string, unknown> = Record<string, unknown>> = (inputObject: T, options: ToolExecuteCallbackOptions) => MaybePromise<unknown>;
+
+    /**
+     * Metadata about a tool's behavior.
+     */
+    interface ToolAnnotations {
+        /**
+         * If `true`, the tool does not modify any state and only reads data.
+         * @default false
+         */
+        readOnlyHint?: boolean;
+        /**
+         * If `true`, indicates the tool may return content from untrusted sources.
+         * @default false
+         */
+        untrustedContentHint?: boolean;
+    }
+
+    /**
+     * Describes a tool to be registered with the model context.
+     */
+    interface ModelContextTool {
+        /**
+         * The name of the tool. Must be 1-128 characters, ASCII alphanumeric, '_', '-', or '.'.
+         */
+        name: string;
+        /**
+         * A human-readable title for the tool.
+         */
+        title?: string;
+        /**
+         * Natural-language description of what the tool does.
+         */
+        description: string;
+        /**
+         * A JSON Schema describing the tool's input parameters.
+         */
+        inputSchema?: object;
+        /**
+         * The function to execute when the tool is called.
+         */
+        execute: ToolExecuteCallback;
+        /**
+         * Metadata about the tool's behavior.
+         */
+        annotations?: ToolAnnotations;
+    }
+
+    /**
+     * Options for registering a tool.
+     */
+    interface ModelContextRegisterToolOptions {
+        /**
+         * An AbortSignal that can be used to unregister the tool.
+         */
+        signal?: AbortSignal;
+        /**
+         * A list of origins that are allowed to call this tool.
+         */
+        exposedTo?: string[];
+    }
+
+    /**
+     * Options for querying registered tools.
+     */
+    interface ModelContextGetToolOptions {
+        /**
+         * An array of origins from which to query tools.
+         */
+        fromOrigins?: string[];
+    }
+
+    /**
+     * Represents a tool that has been registered and is available for execution.
+     */
+    interface RegisteredTool {
+        /**
+         * A unique identifier for the tool.
+         */
+        name: string;
+        /**
+         * A human-readable label for the tool.
+         */
+        title: string;
+        /**
+         * Natural-language description of what the tool does.
+         */
+        description: string;
+        /**
+         * A JSON Schema object describing the expected input parameters for the tool.
+         * It is a deep copy of the schema provided at tool registration, via `ModelContextTool.inputSchema`.
+         */
+        inputSchema?: object;
+        /**
+         * The Window of the document that registered the tool.
+         */
+        window: Window;
+        /**
+         * The origin of the document that registered the tool.
+         */
+        origin: string;
+        /**
+         * Metadata about the tool's behavior.
+         */
+        annotations?: ToolAnnotations;
+    }
+
+    interface ModelContextEventMap {
+        "toolchange": Event;
+    }
+
+    /**
+     * The ModelContext interface provides methods for registering tools.
+     */
+    interface ModelContext extends EventTarget {
+        /**
+         * Registers a new tool.
+         * @param tool The tool definition.
+         * @param options Registration options.
+         */
+        registerTool(tool: ModelContextTool, options?: ModelContextRegisterToolOptions): Promise<void>;
+        /**
+         * Returns a list of registered tools exposed to this document.
+         * @param options Filtering options.
+         */
+        getTools(options?: ModelContextGetToolOptions): Promise<RegisteredTool[]>;
+        /**
+         * Event handler for the toolchange event.
+         */
+        ontoolchange: ((this: ModelContext, ev: Event) => any) | null;
+
+        addEventListener<K extends keyof ModelContextEventMap>(type: K, listener: (this: ModelContext, ev: ModelContextEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof ModelContextEventMap>(type: K, listener: (this: ModelContext, ev: ModelContextEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+}
+
+interface Document {
+    /**
+     * The model context for the current document.
+     * May be undefined if the browser doesn't support WebMCP.
+     */
+    readonly modelContext?: WebMCP.ModelContext;
+}

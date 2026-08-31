@@ -1,0 +1,6 @@
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@mcp-b/webmcp-polyfill@5.1.0'
+  - '@mcp-b/webmcp-types@5.1.0'
