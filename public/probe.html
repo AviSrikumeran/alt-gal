@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WebMCP Probe</title>
+<style>
+  body { margin: 0; padding: 16px; background: #111; color: #eee; }
+  h1 { font: 600 14px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 0 0 12px; }
+  #out { font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; word-break: break-word; margin: 0; }
+</style>
+</head>
+<body>
+<h1>WebMCP Probe</h1>
+<pre id="out"></pre>
+<script>
+(function () {
+  var out = document.getElementById('out');
+
+  function log(line) {
+    out.appendChild(document.createTextNode(String(line) + '\n'));
+  }
+
+  function describeError(e) {
+    if (e && (e.name || e.message)) return e.name + ': ' + e.message;
+    try { return 'non-Error thrown: ' + String(e); } catch (_) { return 'non-Error thrown (unstringifiable)'; }
+  }
+
+  window.onerror = function (message, source, lineno, colno, error) {
+    log('[window.onerror] ' + message + ' @ ' + source + ':' + lineno + ':' + colno +
+        (error ? ' | ' + describeError(error) : ''));
+    return false;
+  };
+
+  window.onunhandledrejection = function (event) {
+    log('[window.onunhandledrejection] ' + describeError(event && event.reason));
+  };
+
+  log('--- environment ---');
+  log('navigator.userAgent: ' + navigator.userAgent);
+  log('location: ' + location.href);
+  log('timestamp: ' + new Date().toISOString());
+
+  log('');
+  log('--- document.modelContext ---');
+  var mc;
+  try {
+    mc = document.modelContext;
+  } catch (e) {
+    log('accessing document.modelContext threw: ' + describeError(e));
+    mc = undefined;
+  }
+  log('typeof document.modelContext: ' + typeof mc);
+  log("'modelContext' in document: " + ('modelContext' in document));
+
+  if (mc === null || mc === undefined) {
+    log('document.modelContext is ' + String(mc) + ' — no properties to enumerate.');
+  } else {
+    try {
+      log('String tag: ' + Object.prototype.toString.call(mc));
+      log('constructor.name: ' + (mc.constructor && mc.constructor.name));
+    } catch (e) {
+      log('tag/constructor inspection threw: ' + describeError(e));
+    }
+
+    var level = 0;
+    var obj = mc;
+    var seen = [];
+    while (obj !== null && obj !== undefined && level < 10) {
+      var label = level === 0 ? 'own properties' : 'prototype level ' + level +
+        ' (' + Object.prototype.toString.call(obj) + ')';
+      log('');
+      log('[' + label + ']');
+      var names;
+      try {
+        names = Object.getOwnPropertyNames(obj).sort();
+      } catch (e) {
+        log('  getOwnPropertyNames threw: ' + describeError(e));
+        break;
+      }
+      if (!names.length) log('  (none)');
+      for (var i = 0; i < names.length; i++) {
+        var name = names[i];
+        var t;
+        try {
+          t = typeof mc[name];
+        } catch (e) {
+          t = '<throws: ' + describeError(e) + '>';
+        }
+        var desc = '';
+        try {
+          var d = Object.getOwnPropertyDescriptor(obj, name);
+          if (d) {
+            if (d.get || d.set) desc = ' [accessor' + (d.get ? ' get' : '') + (d.set ? ' set' : '') + ']';
+            else desc = ' [data' + (d.writable ? ' writable' : '') + (d.enumerable ? ' enumerable' : '') + ']';
+          }
+        } catch (e) { desc = ' [descriptor threw]'; }
+        log('  ' + name + ': ' + t + desc);
+        seen.push(name);
+      }
+      try {
+        var syms = Object.getOwnPropertySymbols(obj);
+        for (var s = 0; s < syms.length; s++) log('  ' + String(syms[s]) + ': (symbol key)');
+      } catch (e) { /* ignore */ }
+      obj = Object.getPrototypeOf(obj);
+      level++;
+    }
+
+    log('');
+    log('[expected members]');
+    var expected = ['registerTool', 'unregisterTool', 'getTools', 'executeTool', 'callTool',
+                    'addEventListener', 'removeEventListener', 'dispatchEvent', 'provideContext', 'tools'];
+    for (var k = 0; k < expected.length; k++) {
+      var n = expected[k];
+      var et;
+      try { et = typeof mc[n]; } catch (e) { et = '<throws: ' + describeError(e) + '>'; }
+      log('  ' + n + ': ' + et + (seen.indexOf(n) === -1 ? '' : ' (found in chain)'));
+    }
+  }
+
+  log('');
+  log('--- registerTool ---');
+  var tool = {
+    name: 'probe_ping',
+    description: 'Returns pong.',
+    inputSchema: { type: 'object', properties: {}, required: [] },
+    execute: async function () { return 'pong'; }
+  };
+
+  var registerResult;
+  var registerReturnedPromise = false;
+  try {
+    if (!mc || typeof mc.registerTool !== 'function') {
+      log('registerTool is not a function (typeof: ' + (mc ? typeof mc.registerTool : 'n/a') + ') — skipping call.');
+    } else {
+      registerResult = mc.registerTool(tool, { signal: new AbortController().signal });
+      registerReturnedPromise = !!registerResult && typeof registerResult.then === 'function';
+      log('registerTool returned: ' + (typeof registerResult) +
+          ' | is thenable/promise: ' + registerReturnedPromise);
+      if (!registerReturnedPromise) {
+        try { log('registerTool sync value: ' + JSON.stringify(registerResult)); }
+        catch (e) { log('registerTool sync value (unserializable): ' + String(registerResult)); }
+      }
+    }
+  } catch (e) {
+    log('registerTool threw synchronously: ' + describeError(e));
+    if (e && e.stack) log('  stack: ' + e.stack);
+  }
+
+  function afterRegister() {
+    log('');
+    log('--- getTools ---');
+    try {
+      if (!mc || typeof mc.getTools !== 'function') {
+        log('getTools is not a function (typeof: ' + (mc ? typeof mc.getTools : 'n/a') + ') — skipping call.');
+        return null;
+      }
+      var r = mc.getTools();
+      log('getTools returned: ' + (typeof r) + ' | is thenable/promise: ' +
+          (!!r && typeof r.then === 'function'));
+      if (r && typeof r.then === 'function') {
+        return r.then(function (v) {
+          logValue('getTools resolved to', v);
+        }, function (err) {
+          log('getTools rejected: ' + describeError(err));
+        });
+      }
+      logValue('getTools value', r);
+      return null;
+    } catch (e) {
+      log('getTools threw synchronously: ' + describeError(e));
+      if (e && e.stack) log('  stack: ' + e.stack);
+      return null;
+    }
+  }
+
+  function logValue(label, v) {
+    if (Array.isArray(v)) {
+      log(label + ': Array(' + v.length + ')');
+      for (var i = 0; i < v.length; i++) {
+        try { log('  [' + i + '] ' + JSON.stringify(v[i])); }
+        catch (e) { log('  [' + i + '] ' + String(v[i]) + ' (unserializable)'); }
+      }
+      return;
+    }
+    try { log(label + ': ' + JSON.stringify(v)); }
+    catch (e) { log(label + ': ' + String(v) + ' (unserializable)'); }
+  }
+
+  function afterGetTools() {
+    log('');
+    log('--- addEventListener("toolchange") ---');
+    try {
+      if (!mc || typeof mc.addEventListener !== 'function') {
+        log('addEventListener is not a function (typeof: ' + (mc ? typeof mc.addEventListener : 'n/a') + ') — skipping call.');
+      } else {
+        mc.addEventListener('toolchange', function (ev) {
+          log('[toolchange event] type=' + (ev && ev.type));
+        });
+        log('addEventListener("toolchange") registered successfully.');
+      }
+    } catch (e) {
+      log('addEventListener("toolchange") threw: ' + describeError(e));
+      if (e && e.stack) log('  stack: ' + e.stack);
+    }
+    log('');
+    log('--- probe complete ---');
+  }
+
+  function runRest() {
+    var p = afterRegister();
+    if (p && typeof p.then === 'function') p.then(afterGetTools, afterGetTools);
+    else afterGetTools();
+  }
+
+  if (registerReturnedPromise) {
+    registerResult.then(function (v) {
+      logValue('registerTool resolved to', v);
+    }, function (err) {
+      log('registerTool rejected: ' + describeError(err));
+      if (err && err.stack) log('  stack: ' + err.stack);
+    }).then(runRest, runRest);
+  } else {
+    runRest();
+  }
+})();
+</script>
+</body>
+</html>
