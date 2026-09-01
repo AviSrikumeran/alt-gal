@@ -63,7 +63,7 @@ describe('contrastRatio (WCAG 2.1)', () => {
   });
 });
 
-describe('onColor (D-046, D-219)', () => {
+describe('onColor (D-046, D-220)', () => {
   it('never picks the worse of the two candidates', () => {
     for (const input of [...PRIMARIES, 'hsl(38, 92%, 50%)', 'hsl(0, 84%, 60%)', 'hsl(0, 0%, 100%)']) {
       const base = parseColor(input)!;

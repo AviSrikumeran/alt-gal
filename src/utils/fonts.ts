@@ -51,7 +51,7 @@ export const fontVar = (family: string): `--${string}` =>
   `--font-${family.toLowerCase().replace(/\s+/g, '-')}` as `--${string}`;
 
 /**
- * Canvas stack (D-066, D-120 as amended by D-220). next/font renames families internally
+ * Canvas stack (D-066, D-120 as amended by D-221). next/font renames families internally
  * ('__Inter_abc123'), so the loaded name is reached through the variable fontLoader.ts declares
  * rather than by importing FONTS here: `utils/fonts` is imported by tokenToCss, the stores, and
  * every test, and `next/font/google` only resolves inside the Next compiler.

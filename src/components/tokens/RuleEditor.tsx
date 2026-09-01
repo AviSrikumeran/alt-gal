@@ -13,7 +13,7 @@ import { generateId } from '@/utils/idGenerator';
 import { useRuleStore } from '@/stores/ruleStore';
 import { evaluateAll } from '@/engine/ruleEngine';
 import { useUIStore } from '@/stores/uiStore';
-import { commitHuman } from './_commit';
+import { commitHuman } from '@/engine/commit';
 
 interface Preset {
   label: string;

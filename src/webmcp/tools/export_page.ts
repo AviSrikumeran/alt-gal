@@ -3,7 +3,7 @@
 // tool exists exactly when it has something to emit. Untrusted: it carries page copy.
 import type { ToolDefinition } from '@/types/webmcp';
 import type { ExportSummary } from '@/webmcp/outcomes';
-import { NOT_WIRED, exportPage } from '@/webmcp/pending';
+import { exportPage } from '@/webmcp/pending';
 import { useLayoutStore } from '@/stores/layoutStore';
 import { exportDelivery, fail, notFound } from '@/webmcp/outcomes';
 import { guard, optionalString } from '@/webmcp/validate';
@@ -44,7 +44,6 @@ const tool: ToolDefinition<Record<string, unknown>, ExportSummary> = {
               hint: 'Sketch a wireframe, get the human to approve it, then call render_page.',
             });
 
-      if (!exportPage) return fail('INTERNAL', NOT_WIRED('Page export', 'Stream 5'));
       return exportDelivery(exportPage(page.id), `the page "${page.title}"`);
     }),
 };

@@ -12,7 +12,7 @@ import { SEMANTIC_COLOR_ROLES } from '@/types/tokens';
 import type { HSL, PaletteStrategy } from '@/utils/colorUtils';
 import { generatePalette, parseColor, toHSLString, toHex } from '@/utils/colorUtils';
 import { paletteToValues, useTokenStore } from '@/stores/tokenStore';
-import { commitTokens, useTokenEditor } from './_commit';
+import { commitTokens, useTokenEditor } from './useTokenEditor';
 import { useAgentTouchedTokens } from './_agentFlash';
 import { Row } from './_controls';
 import LockToggle from './LockToggle';

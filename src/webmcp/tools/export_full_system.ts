@@ -3,8 +3,8 @@
 // rendered pages, a README and a package.json — the whole thing as one download.
 import type { ToolDefinition } from '@/types/webmcp';
 import type { ExportSummary } from '@/webmcp/outcomes';
-import { NOT_WIRED, exportFullSystem } from '@/webmcp/pending';
-import { exportDelivery, fail } from '@/webmcp/outcomes';
+import { exportFullSystem } from '@/webmcp/pending';
+import { exportDelivery } from '@/webmcp/outcomes';
 import { guard } from '@/webmcp/validate';
 
 const tool: ToolDefinition<Record<string, unknown>, ExportSummary> = {
@@ -18,7 +18,6 @@ const tool: ToolDefinition<Record<string, unknown>, ExportSummary> = {
   untrusted: true,
   execute: () =>
     guard(() => {
-      if (!exportFullSystem) return fail('INTERNAL', NOT_WIRED('The full-system export', 'Stream 5'));
       return exportDelivery(exportFullSystem(), 'the complete design system');
     }),
 };

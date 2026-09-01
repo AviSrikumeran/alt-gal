@@ -3,7 +3,6 @@
 // point: the tool surface follows the state, and nothing is deleted to make that happen.
 import type { ToolDefinition } from '@/types/webmcp';
 import { useComponentStore } from '@/stores/componentStore';
-import { detachComponentFromPage } from '@/webmcp/pending';
 import { ok } from '@/webmcp/results';
 import { notFound } from '@/webmcp/outcomes';
 import { guard, requireString } from '@/webmcp/validate';
@@ -35,7 +34,9 @@ const tool: ToolDefinition<Record<string, unknown>, RemoveComponentData> = {
 
       const spec = components.remove(id)!;
       // D-138: the section keeps its shape and renders as emptied until the page is re-rendered.
-      if (spec.pageId) detachComponentFromPage?.(spec.pageId, id);
+      // I-7: no second write is needed. `layoutEngine.orderSectionComponents` derives a section's
+      // live contents from componentStore, so dropping the component here is the whole change —
+      // the stubbed `setPageSections` call this replaced never had anything to do.
 
       return ok(
         `Removed ${spec.type} ${id}.` +

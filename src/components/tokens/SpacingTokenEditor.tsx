@@ -6,7 +6,7 @@
  */
 import { useTokenStore } from '@/stores/tokenStore';
 import { SPACING_SCALE } from '@/utils/defaults';
-import { useTokenEditor } from './_commit';
+import { useTokenEditor } from './useTokenEditor';
 import { useAgentTouchedTokens } from './_agentFlash';
 import { Row, Segmented } from './_controls';
 import LockToggle from './LockToggle';

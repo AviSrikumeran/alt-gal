@@ -1,23 +1,21 @@
-import type { ToolErrorCode, ToolOutcome } from '@/types/webmcp';
+import type { ToolOutcome } from '@/types/webmcp';
 import type { ExportFile } from '@/types/export';
 import { useUIStore } from '@/stores/uiStore';
 
 /**
- * Shared outcome builders for tool bodies.
+ * Shared outcome builders for tool bodies (D-007).
  *
- * `results.ts` (seed, frozen) exports a `fail` whose first parameter resolves to `never`
- * — `ToolResult extends { code: infer C }` is false for the union's ok:true arm — so it
- * cannot be called. This is the same helper with the parameter typed as ToolErrorCode.
- * Fixing results.ts needs a ledger entry; until then tools import `fail` from here and
- * `ok` from results.ts (D-007).
+ * I-5: `fail` and `ToolError` used to be defined here, because results.ts's `fail` typed its
+ * `code` parameter as `ToolResult extends { code: infer C } ? C : never` — false for the union's
+ * ok:true arm, so it collapsed to `never` and the function could not be called. results.ts now
+ * types it `ToolErrorCode` and owns both; they are re-exported here so the tools' existing
+ * `from '@/webmcp/outcomes'` imports keep working, and imported locally because the helpers
+ * below build on them.
  */
-export type ToolError = Extract<ToolOutcome, { kind: 'error' }>;
-
-export const fail = (
-  code: ToolErrorCode,
-  message: string,
-  extra?: { hint?: string; alternatives?: string[] },
-): ToolError => ({ kind: 'error', code, message, ...extra });
+import { fail } from '@/webmcp/results';
+import type { ToolError } from '@/webmcp/results';
+export type { ToolError };
+export { fail };
 
 /** D-125: a missing id always answers with the current valid ids and the tool that lists them. */
 export const notFound = (what: string, id: string, ids: string[], listTool: string): ToolError =>

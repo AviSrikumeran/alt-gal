@@ -9,7 +9,7 @@ const PHASE_STORE_ALLOWED = [
   'src/components/canvas/**',
   'src/stores/phaseStore.ts',
   'src/stores/logStore.ts', // D-083: call-time read when stamping entries
-  // D-222: the one declarative tool lives in the token panel (D-029) but still has to stamp a
+  // D-223: the one declarative tool lives in the token panel (D-029) but still has to stamp a
   // ToolResult envelope, and `phase` is a required field of that envelope. One file, not the dir.
   'src/components/tokens/PrimaryColorForm.tsx',
 ];

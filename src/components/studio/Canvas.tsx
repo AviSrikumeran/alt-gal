@@ -149,11 +149,11 @@ export default function Canvas() {
         >
           {active ? (
             <ErrorBoundary>
-              <WireframeViewSlot wireframe={active} />
+              <WireframeViewSlot wireframe={active} page={activePage} />
             </ErrorBoundary>
           ) : loose.length > 0 ? (
             <ErrorBoundary>
-              <ComponentGridSlot specs={loose} />
+              <ComponentGridSlot />
             </ErrorBoundary>
           ) : (
             <EmptyState phase={phase} onAddComponent={() => setFormOpen(true)} />
@@ -172,7 +172,7 @@ export default function Canvas() {
             </button>
             {drawerOpen && (
               <ErrorBoundary>
-                <ComponentGridSlot specs={loose} />
+                <ComponentGridSlot />
               </ErrorBoundary>
             )}
           </div>

@@ -143,13 +143,26 @@ No UI framework. No CSS framework. No highlighter, no icon library, no color lib
 ```bash
 pnpm install
 pnpm dev          # http://localhost:3000
-pnpm typecheck    # tsc --noEmit
+pnpm typecheck    # next typegen (pretypecheck), then tsc --noEmit
 pnpm lint         # eslint + prettier --check
 pnpm test         # vitest
 pnpm e2e          # playwright, against the fake modelContext fixture
 
 ./scripts/verify-export.sh        # compiles the TSX this studio exports, in a scratch app
 node scripts/sync-library-css.mjs # after editing src/components/library/library.css
+```
+
+`typecheck` is preceded by a `pretypecheck` script that runs `next typegen`, because `tsc` cannot
+resolve the generated route types (`LayoutProps`, `PageProps`, and the `.next/types` entries
+`tsconfig.json` includes) until they have been written. Running `tsc --noEmit` on a clean checkout
+without it fails on types the repo never declares.
+
+`next typegen` also rewrites `tsconfig.json` as a side effect — it sets `jsx` to `react-jsx`, adds
+`.next/dev/types/**/*.ts` to `include`, and reformats every array. `tsconfig.json` is a frozen
+boundary file (D-214) and none of that is wanted, so **revert it after running typegen**:
+
+```bash
+git checkout -- tsconfig.json
 ```
 
 The polyfill is a dynamic import that runs only when `document.modelContext` is absent after a short

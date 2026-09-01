@@ -6,7 +6,7 @@ import type { Wireframe, WireframeSection } from '@/types/layouts';
 import { useLayoutStore } from '@/stores/layoutStore';
 import { SECTION_BOX, boxLabel, innerBoxCount, moveSection, removeSection } from '@/engine/wireframeEngine';
 import { AddSectionButton, SectionControls } from './SectionControls';
-import { commitHuman } from './_commit';
+import { commitHuman } from '@/engine/commit';
 import './canvas.css';
 
 export interface WireframePreviewProps {

@@ -74,10 +74,24 @@ function rootToken(spec: ComponentSpec, cssProperty: string): TokenPath | null {
  */
 export function resolveProperty(spec: ComponentSpec, property: RuleProperty): string | null {
   const state = useTokenStore.getState();
+
+  /**
+   * I-1: a color the human has never set resolves to its D-109 sentinel, which is a grey the
+   * studio painted — not a value anyone chose. Judging a rule against it invents violations of
+   * decisions nobody made ("no red primaries" firing on an untokenised canvas), so an unset
+   * color returns null and the rule is skipped exactly like an inapplicable property.
+   */
+  const isUnsetColor = (path: TokenPath): boolean =>
+    path.startsWith('color.') && state.colors[path.slice('color.'.length) as SemanticColorRole] == null;
+
   const resolve = (cssProperty: string): string | null => {
     const path = rootToken(spec, cssProperty);
-    return path ? tokenValue(state, path) : null;
+    if (!path || isUnsetColor(path)) return null;
+    return tokenValue(state, path);
   };
+
+  /** Same skip for the two `contrast` fallbacks, which name their tokens directly. */
+  const resolveToken = (path: TokenPath): string | null => (isUnsetColor(path) ? null : tokenValue(state, path));
 
   switch (property) {
     case 'variant':
@@ -102,8 +116,8 @@ export function resolveProperty(spec: ComponentSpec, property: RuleProperty): st
       return String(round2(2 * Number(pad) + Number(size) * Number(lh ?? 1)));
     }
     case 'contrast': {
-      const fg = resolve('color') ?? tokenValue(state, 'color.text-primary');
-      const bg = resolve('background-color') ?? tokenValue(state, 'color.background');
+      const fg = resolve('color') ?? resolveToken('color.text-primary');
+      const bg = resolve('background-color') ?? resolveToken('color.background');
       if (fg === null || bg === null) return null;
       return String(contrastRatio(fg, bg));
     }

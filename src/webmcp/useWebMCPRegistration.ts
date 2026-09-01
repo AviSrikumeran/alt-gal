@@ -8,6 +8,7 @@ import { toolsForPhase, isToolAvailable } from '@/webmcp/toolPhaseMap';
 import { toResult, serialize } from '@/webmcp/results';
 import { getModelContext } from '@/webmcp/detect';
 import type { ToolDefinition, ToolName, ToolOutcome } from '@/types/webmcp';
+import { ToolInputError } from '@/types/webmcp';
 
 const isAbortError = (e: unknown): boolean => e instanceof DOMException && e.name === 'AbortError';
 
@@ -40,7 +41,13 @@ function wrapTool(def: ToolDefinition): WebMCP.ModelContextTool {
         try {
           outcome = def.execute((input ?? {}) as Record<string, unknown>);
         } catch (e) {
-          outcome = { kind: 'error', code: 'INTERNAL', message: e instanceof Error ? e.message : String(e) };
+          // I-6, D-076: this is the backstop for a tool body that threw outside its own `guard`.
+          // A ToolInputError is the agent's mistake, not the studio's, so it keeps the same
+          // INVALID_INPUT mapping (and its alternatives) that guard() would have given it.
+          outcome =
+            e instanceof ToolInputError
+              ? { kind: 'error', code: 'INVALID_INPUT', message: e.message, alternatives: e.alternatives }
+              : { kind: 'error', code: 'INTERNAL', message: e instanceof Error ? e.message : String(e) };
         }
       }
       const phaseAfter = usePhaseStore.getState().currentPhase; // D-032: sync recalc already ran

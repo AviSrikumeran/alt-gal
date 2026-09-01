@@ -36,7 +36,9 @@ export function inputSummary(input: Record<string, unknown>): string {
 
 /** Human entries read as plain language; agent entries keep the tool name (D-160). */
 export function entryLabel(entry: AgentLogEntry): string {
-  if (entry.actor === 'agent') return entry.tool;
+  // I-8: a call the human drove from the Tool Inspector went through the same host path as a
+  // real agent call, so the transcript says which it was instead of implying a host was there.
+  if (entry.actor === 'agent') return entry.source === 'inspector' ? `${entry.tool} · inspector` : entry.tool;
   const subject = String(
     entry.input.path ?? entry.input.role ?? entry.input.type ?? entry.input.title ?? entry.input.tool ?? '',
   );
@@ -61,7 +63,7 @@ function Row({ entry }: { entry: AgentLogEntry }) {
   };
 
   return (
-    <li className="alt-log__entry" data-tone={tone} data-undone={entry.undone || undefined}>
+    <li className="alt-log__entry" data-tone={tone} data-source={entry.source} data-undone={entry.undone || undefined}>
       <div className="alt-log__head">
         <span className="alt-log__dot" aria-hidden="true" />
         <button

@@ -5,7 +5,7 @@ import type { SectionType, WireframeSection } from '@/types/layouts';
 import { SECTION_TYPES } from '@/types/layouts';
 import { useLayoutStore } from '@/stores/layoutStore';
 import { addSection, createSection, moveSection, removeSection, sectionLabel } from '@/engine/wireframeEngine';
-import { commitHuman } from './_commit';
+import { commitHuman } from '@/engine/commit';
 import './canvas.css';
 
 /** Every section edit is one human log entry with a `restore_sections` inverse (D-129, D-183). */

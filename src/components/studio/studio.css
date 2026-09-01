@@ -40,19 +40,6 @@
   margin: 0;
 }
 
-.alt-slot {
-  color: var(--studio-text-faint);
-  font-size: 12px;
-  border: 1px dashed var(--studio-border-strong);
-  border-radius: var(--studio-radius);
-  padding: 12px;
-  margin-top: 12px;
-}
-.alt-slot--canvas {
-  margin: 24px;
-  text-align: center;
-}
-
 /* ---- phase bar ----------------------------------------------------------- */
 
 .alt-phasebar {
@@ -439,6 +426,11 @@
 .alt-log__entry[data-tone='undone'] .alt-log__dot {
   background: var(--studio-text-faint);
 }
+/* I-8: inspector-driven calls are the human's, so their dot reads as a human entry. */
+.alt-log__entry[data-source='inspector'] .alt-log__dot {
+  box-shadow: inset 0 0 0 2px var(--studio-bg);
+}
+
 .alt-log__entry[data-undone] .alt-log__tool {
   text-decoration: line-through;
   color: var(--studio-text-faint);
@@ -544,26 +536,6 @@
 }
 
 /* ---- status bar, toasts, sheet ------------------------------------------- */
-
-.alt-statusbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 28px;
-  padding: 0 16px;
-  background: var(--studio-bg);
-  border-top: 1px solid var(--studio-border);
-  font-size: 11px;
-  color: var(--studio-text-muted);
-}
-.alt-statusbar .alt-slot {
-  border: 0;
-  padding: 0;
-  margin: 0;
-}
-.alt-statusbar__counts {
-  margin-left: auto;
-}
 
 .alt-toastrail {
   position: fixed;

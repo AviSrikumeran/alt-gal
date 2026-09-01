@@ -160,7 +160,12 @@ describe('resolveProperty', () => {
     expect(resolveProperty(spec('button', 'primary'), 'background-color')).toBe('hsl(250, 84.0%, 60.0%)');
   });
 
-  it('falls back to the D-109 sentinel for an unset colour', () => {
+  it('returns null for an unset colour rather than judging its D-109 sentinel (I-1)', () => {
+    // The sentinel is a grey the studio painted, not a value the human chose. Rules skip it the
+    // same way they skip a property the component type does not have.
+    expect(resolveProperty(spec('button', 'primary'), 'background-color')).toBeNull();
+    setColors({ primary: UNSET_COLOR.primary });
+    // Once the human actually picks that grey, it is a real value and resolves normally.
     expect(resolveProperty(spec('button', 'primary'), 'background-color')).toBe(UNSET_COLOR.primary);
   });
 
@@ -320,9 +325,10 @@ describe('evaluateSpec', () => {
 
   it('reports every violated rule for one spec', () => {
     setColors({ primary: 'hsl(2, 84.0%, 60.0%)' });
-    // danger is unset, so its sentinel (58% gray) sits under the text-primary sentinel (20%) at ~3.5:1.
+    // danger is unset, so background-color and contrast resolve to null and their rules are
+    // skipped (I-1). Only the two rules that read real values are reported.
     const violations = evaluateSpec(spec('button', 'danger', 'sm'), Object.values(PRESETS));
-    expect(violations.map((v) => v.property).sort()).toEqual(['background-color', 'contrast', 'min-height', 'variant']);
+    expect(violations.map((v) => v.property).sort()).toEqual(['min-height', 'variant']);
     for (const v of violations) expect(v.ruleDescription).toBeTruthy();
   });
 

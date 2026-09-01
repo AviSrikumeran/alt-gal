@@ -1,31 +1,16 @@
 'use client';
 /**
- * Local `commitHuman` shim (D-077, §11.2 Stream 1). Stream 5 ships `@/engine/commit` and DELETES this
- * file at integration; the import sites change, the call shape does not — the signature here is the
- * ledger's, two arguments and nothing else.
+ * The token panel's write path (D-110, D-111, D-112). Every human mutation of a token goes
+ * through here and is logged once, by `commitHuman` from `@/engine/commit` (D-077).
  *
- * Stores never log (D-077). Human UI mutations are logged here; tool calls are logged by the
- * registration wrapper.
+ * I-2: this was `_commit.ts`, which carried a local `commitHuman` shim until Stream 5 landed the
+ * real one. The shim is gone; only the token-editor code it wrapped remains.
  */
 import { useRef } from 'react';
 import type { InverseAction } from '@/types/log';
 import type { TokenPath } from '@/types/tokens';
-import { useLogStore } from '@/stores/logStore';
+import { commitHuman } from '@/engine/commit';
 import { applyToken, useTokenStore } from '@/stores/tokenStore';
-
-export function commitHuman(action: string, mutate: () => InverseAction | null): void {
-  const started = Date.now();
-  const inverse = mutate();
-  useLogStore.getState().addEntry({
-    actor: 'human',
-    tool: action,
-    input: {},
-    result: null,
-    status: 'ok',
-    durationMs: Date.now() - started,
-    inverse,
-  });
-}
 
 export interface TokenEditor {
   /** Capture the pre-drag value. Call on pointerdown/focus. */

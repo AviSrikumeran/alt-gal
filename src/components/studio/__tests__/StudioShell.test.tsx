@@ -106,7 +106,7 @@ describe('StudioShell', () => {
     const html = at(0);
     expect(html).toContain('<header class="alt-phasebar"');
     expect(html).toContain('<main class="alt-canvas"');
-    expect(html).toContain('<footer class="alt-statusbar"');
+    expect(html).toContain('<footer class="alt-status"'); // Stream 3's WebMCPStatusBar (D-158)
   });
 
   it('shows the small-screen notice for viewports under 1024px (D-155)', () => {

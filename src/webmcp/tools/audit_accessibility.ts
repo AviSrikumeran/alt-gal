@@ -3,9 +3,8 @@
 // there is a palette, a type scale and components to check. It never mutates anything.
 import type { ToolDefinition } from '@/types/webmcp';
 import type { AuditFinding } from '@/webmcp/pending';
-import { AUDIT_SCOPES, NOT_WIRED, auditAccessibility } from '@/webmcp/pending';
+import { AUDIT_SCOPES, auditAccessibility } from '@/webmcp/pending';
 import { ok } from '@/webmcp/results';
-import { fail } from '@/webmcp/outcomes';
 import { guard, optionalEnum } from '@/webmcp/validate';
 
 interface AuditAccessibilityData {
@@ -37,11 +36,6 @@ const tool: ToolDefinition<Record<string, unknown>, AuditAccessibilityData> = {
   execute: (input) =>
     guard(() => {
       const scope = optionalEnum(input, 'scope', AUDIT_SCOPES, 'all');
-      if (!auditAccessibility)
-        return fail('INTERNAL', NOT_WIRED('The accessibility audit', 'Stream 1'), {
-          hint: 'explain_component reports the tokens behind a component so contrast can be reasoned about by hand.',
-        });
-
       const findings = auditAccessibility(scope);
       const errors = findings.filter((f) => f.severity === 'error').length;
       const warnings = findings.length - errors;

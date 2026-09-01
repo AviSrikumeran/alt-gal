@@ -3,7 +3,7 @@
 // carries the content the human and the agent wrote.
 import type { ToolDefinition } from '@/types/webmcp';
 import type { ExportSummary } from '@/webmcp/outcomes';
-import { NOT_WIRED, exportComponents } from '@/webmcp/pending';
+import { exportComponents } from '@/webmcp/pending';
 import { useComponentStore } from '@/stores/componentStore';
 import { exportDelivery, fail } from '@/webmcp/outcomes';
 import { guard } from '@/webmcp/validate';
@@ -23,7 +23,6 @@ const tool: ToolDefinition<Record<string, unknown>, ExportSummary> = {
         return fail('INVALID_INPUT', 'There are no components to export.', {
           hint: 'Generate components first, or export_tokens for the token layer alone.',
         });
-      if (!exportComponents) return fail('INTERNAL', NOT_WIRED('Component export', 'Stream 5'));
       return exportDelivery(exportComponents(), 'the component library');
     }),
 };

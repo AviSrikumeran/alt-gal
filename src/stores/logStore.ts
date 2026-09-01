@@ -7,9 +7,13 @@ import { usePhaseStore } from '@/stores/phaseStore';
 /** Owns the collaboration log: agent tool calls and human UI actions, newest last (UI reverses). */
 export interface LogState {
   entries: AgentLogEntry[];
+  /** I-8: stamped onto agent entries as they are added. Transient — never persisted. */
+  source: 'agent' | 'inspector';
 }
 export interface LogActions {
   addEntry(entry: NewLogEntry): AgentLogEntry;
+  /** I-8: the Tool Inspector sets 'inspector' around its call and restores 'agent' after. */
+  setSource(source: 'agent' | 'inspector'): void;
   markUndone(id: string): void;
   get(id: string): AgentLogEntry | undefined;
   lastUndoable(): AgentLogEntry | undefined;
@@ -21,6 +25,8 @@ export const useLogStore = create<LogStore>()(
   persist(
     (set, get) => ({
       entries: [],
+      source: 'agent',
+      setSource: (source) => set({ source }),
       addEntry: (entry) => {
         const full: AgentLogEntry = {
           ...entry,
@@ -28,6 +34,7 @@ export const useLogStore = create<LogStore>()(
           timestamp: Date.now(),
           undone: false,
           phase: usePhaseStore.getState().currentPhase,
+          ...(entry.actor === 'agent' ? { source: entry.source ?? get().source } : {}),
         };
         set((s) => ({ entries: [...s.entries, full] }));
         return full;
@@ -37,6 +44,11 @@ export const useLogStore = create<LogStore>()(
       lastUndoable: () => [...get().entries].reverse().find((e) => e.inverse && !e.undone),
       clear: () => set({ entries: [] }),
     }),
-    { name: 'altgal.log.v1', version: 1 },
+    {
+      name: 'altgal.log.v1',
+      version: 1,
+      // `source` is a live flag, not history: a reload must not resume in inspector mode.
+      partialize: (s) => ({ entries: s.entries }),
+    },
   ),
 );

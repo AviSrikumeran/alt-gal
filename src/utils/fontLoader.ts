@@ -4,7 +4,7 @@
  * outside the Next compiler, so nothing that tests or tools import may reach it (see utils/fonts.ts).
  *
  * Each family is declared with `variable`, so the loaded face name lands in the CSS custom property
- * `fontVar(family)` returns (D-220). `app/layout.tsx` (Stream 5) puts FONT_CLASSNAMES on <html>; every
+ * `fontVar(family)` returns (D-221). `app/layout.tsx` (Stream 5) puts FONT_CLASSNAMES on <html>; every
  * @font-face is then present and `--font-geist` / `--font-geist-mono` resolve for globals.css (D-142).
  *
  * Each call spells out its own options: next/font types `subsets` per family, so a shared `opts`

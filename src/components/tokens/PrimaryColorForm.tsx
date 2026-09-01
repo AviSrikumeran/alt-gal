@@ -18,7 +18,7 @@ import { parseColor, toHex } from '@/utils/colorUtils';
 import { useTokenStore } from '@/stores/tokenStore';
 import { usePhaseStore } from '@/stores/phaseStore';
 import { ok, serialize, toResult } from '@/webmcp/results';
-import { useTokenEditor } from './_commit';
+import { useTokenEditor } from './useTokenEditor';
 
 /**
  * The agent-invocation fields the host adds to a submit event. They are not in Chrome's attribute

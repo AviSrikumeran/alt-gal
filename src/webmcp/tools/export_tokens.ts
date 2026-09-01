@@ -3,9 +3,9 @@
 // anything is built with it is the failure mode this studio is arguing against.
 import type { ToolDefinition } from '@/types/webmcp';
 import type { ExportSummary } from '@/webmcp/outcomes';
-import { TOKEN_EXPORT_FORMATS, NOT_WIRED, exportTokens } from '@/webmcp/pending';
+import { TOKEN_EXPORT_FORMATS, exportTokens } from '@/webmcp/pending';
 import type { TokenExportFormat } from '@/webmcp/pending';
-import { exportDelivery, fail } from '@/webmcp/outcomes';
+import { exportDelivery } from '@/webmcp/outcomes';
 import { guard, optionalStringArray } from '@/webmcp/validate';
 import { ToolInputError } from '@/types/webmcp';
 
@@ -39,7 +39,6 @@ const tool: ToolDefinition<Record<string, unknown>, ExportSummary> = {
           ]);
       const formats = (requested as TokenExportFormat[] | undefined) ?? [...TOKEN_EXPORT_FORMATS];
 
-      if (!exportTokens) return fail('INTERNAL', NOT_WIRED('Token export', 'Stream 5'));
       return exportDelivery(exportTokens(formats), `tokens as ${formats.join(', ')}`);
     }),
 };

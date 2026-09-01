@@ -115,7 +115,7 @@ export function contrastRatio(a: string, b: string): number {
   return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
 }
 /**
- * D-046 candidate pair, D-219 selection rule: pick whichever of the two derived on-colors
+ * D-046 candidate pair, D-220 selection rule: pick whichever of the two derived on-colors
  * actually contrasts more against the base instead of switching on HSL lightness. Lightness is
  * not luminance — a green at l=45 or an amber at l=50 is bright, and the lightness rule handed
  * them white text at 2.2:1 and 2.0:1. Never worse than the lightness rule; the candidates are
@@ -146,7 +146,7 @@ export const hueDist = (a: number, b: number): number => {
 };
 
 /**
- * D-218 amends D-162: text-muted sits at l=54, not 58. At 58 the pair
+ * D-219 amends D-162: text-muted sits at l=54, not 58. At 58 the pair
  * text-muted/background fails D-163's >=3:1 for green (2.76) and orange (2.92) primaries;
  * 54 clears it for all four test primaries x four strategies. Measured, not estimated.
  */

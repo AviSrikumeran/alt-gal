@@ -11,7 +11,7 @@ import type { FontWeightKey, LineHeightKey, TokenPath, TypeScaleKey } from '@/ty
 import type { FontCategory } from '@/utils/fonts';
 import { FONT_CATALOG, FONT_CATEGORY_LABEL, FONT_GROUPS, fontStack } from '@/utils/fonts';
 import { useTokenStore } from '@/stores/tokenStore';
-import { commitTokens, useTokenEditor } from './_commit';
+import { commitTokens, useTokenEditor } from './useTokenEditor';
 import { useAgentTouchedTokens } from './_agentFlash';
 import { Row, Segmented, Slider } from './_controls';
 import LockToggle from './LockToggle';

@@ -2,11 +2,8 @@
 // The moment the studio is built around, so it is gated behind a wireframe the human has
 // seen. Rendering a wireframe that already has a page re-renders it (D-140).
 import type { ToolDefinition } from '@/types/webmcp';
-import type { RenderedPage } from '@/types/layouts';
-import { generateId } from '@/utils/idGenerator';
-import { useComponentStore } from '@/stores/componentStore';
 import { useLayoutStore } from '@/stores/layoutStore';
-import { NOT_WIRED, renderWireframe } from '@/webmcp/pending';
+import { renderPage } from '@/engine/layoutEngine';
 import { ok } from '@/webmcp/results';
 import { fail, notFound } from '@/webmcp/outcomes';
 import { guard, requireString } from '@/webmcp/validate';
@@ -49,38 +46,15 @@ const tool: ToolDefinition<Record<string, unknown>, RenderPageData> = {
           hint: 'Add sections with modify_layout, or sketch a new wireframe.',
         });
 
-      if (!renderWireframe)
-        return fail('INTERNAL', NOT_WIRED('Page rendering', 'Stream 4'), {
-          hint: 'The human can still see the wireframe on the canvas; components generated so far are unaffected.',
-        });
+      // I-9: Stream 4's engine owns the whole render, including D-140's implicit unrender of a
+      // page the wireframe already had. It returns null only for an unknown wireframe id, which
+      // the notFound above has already ruled out.
+      const { page, componentIds, replaced } = renderPage(wireframeId, 'agent')!;
 
-      // D-140: an existing page means re-render — drop the old page and its components first.
-      const existing = layouts.renderedPages.find((p) => p.wireframeId === wireframeId);
-      if (existing) {
-        useComponentStore.getState().removeMany(existing.sections.flatMap((s) => s.componentIds));
-        layouts.removeRenderedPage(existing.id);
-      }
-
-      const pageId = generateId('page');
-      const render = renderWireframe(wireframe, pageId);
-      for (const spec of render.specs) useComponentStore.getState().add(spec);
-
-      const page: RenderedPage = {
-        id: pageId,
-        wireframeId,
-        pageType: wireframe.pageType,
-        title: wireframe.title,
-        sections: render.sections,
-        createdAt: Date.now(),
-      };
-      layouts.addRenderedPage(page);
-      layouts.setWireframeStatus(wireframeId, 'rendered');
-
-      const componentIds = render.specs.map((s) => s.id);
       return ok(
-        `${existing ? 'Re-rendered' : 'Rendered'} "${wireframe.title}" as ${page.sections.length} styled section${page.sections.length === 1 ? '' : 's'} built from ${componentIds.length} component${componentIds.length === 1 ? '' : 's'}.`,
-        { pageId, wireframeId, componentIds, reRendered: Boolean(existing) },
-        { kind: 'unrender_page', pageId, wireframeId, componentIds },
+        `${replaced ? 'Re-rendered' : 'Rendered'} "${wireframe.title}" as ${page.sections.length} styled section${page.sections.length === 1 ? '' : 's'} built from ${componentIds.length} component${componentIds.length === 1 ? '' : 's'}.`,
+        { pageId: page.id, wireframeId, componentIds, reRendered: replaced !== null },
+        { kind: 'unrender_page', pageId: page.id, wireframeId, componentIds },
       );
     }),
 };

@@ -24,6 +24,13 @@ export interface AgentLogEntry {
   id: string; // log_xxxxxxxx
   timestamp: number; // Unix ms (D-038)
   actor: 'agent' | 'human';
+  /**
+   * I-8: which agent-side caller produced the entry. Tool calls arriving from a real WebMCP host
+   * and calls the human drove from the studio's own Tool Inspector are identical by the time they
+   * reach the log, and reading a demo transcript as if a host had made those calls is misleading.
+   * Absent on human (`actor: 'human'`) entries.
+   */
+  source?: 'agent' | 'inspector';
   tool: string; // ToolName, or 'ui.<action>' for humans (D-060)
   input: Record<string, unknown>;
   result: ToolResult | null; // null for human actions

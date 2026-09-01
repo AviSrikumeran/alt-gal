@@ -7,7 +7,7 @@
 import type { ElevationKey, TokenPath } from '@/types/tokens';
 import { useTokenStore } from '@/stores/tokenStore';
 import { DEFAULT_TOKENS } from '@/utils/defaults';
-import { commitTokens, useTokenEditor } from './_commit';
+import { commitTokens, useTokenEditor } from './useTokenEditor';
 import { useAgentTouchedTokens } from './_agentFlash';
 import { Row, Segmented } from './_controls';
 import LockToggle from './LockToggle';

@@ -3,9 +3,9 @@
 // version is export_components at phase 4. Untrusted: the code carries authored content.
 import type { ToolDefinition } from '@/types/webmcp';
 import { useComponentStore } from '@/stores/componentStore';
-import { NOT_WIRED, componentCode } from '@/webmcp/pending';
+import { componentCode } from '@/webmcp/pending';
 import { ok } from '@/webmcp/results';
-import { fail, notFound } from '@/webmcp/outcomes';
+import { notFound } from '@/webmcp/outcomes';
 import { guard, requireString } from '@/webmcp/validate';
 
 interface GetComponentCodeData {
@@ -34,11 +34,6 @@ const tool: ToolDefinition<Record<string, unknown>, GetComponentCodeData> = {
       const components = useComponentStore.getState();
       const spec = components.get(id);
       if (!spec) return notFound('component', id, components.ids(), 'list_components');
-
-      if (!componentCode)
-        return fail('INTERNAL', NOT_WIRED('Component source export', 'Stream 5'), {
-          hint: 'explain_component reports the same styling as token references and current values.',
-        });
 
       const { filename, code } = componentCode(spec);
       return ok(`${filename} — ${code.split('\n').length} lines of TSX for ${spec.type} ${id}.`, {

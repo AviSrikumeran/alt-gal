@@ -5,7 +5,7 @@
  */
 import type { RadiusKey, TokenPath } from '@/types/tokens';
 import { useTokenStore } from '@/stores/tokenStore';
-import { useTokenEditor } from './_commit';
+import { useTokenEditor } from './useTokenEditor';
 import { useAgentTouchedTokens } from './_agentFlash';
 import { Row, Slider } from './_controls';
 import LockToggle from './LockToggle';

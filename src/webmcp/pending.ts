@@ -1,63 +1,54 @@
 /**
- * Boundary shims — the engine entry points Stream 3's tools call that other streams own
- * and that do not exist in the tree yet (§11.2: "Stream 3 stubs the call; it does not add
- * the function"). Each is `null` until its owner lands; every caller degrades to an
- * honest envelope instead of pretending to work.
+ * The engine seam for Stream 3's tools: the entry points the tools call that other streams own.
  *
- * Integration (Stream 5) replaces each `null` with the real import and deletes this note.
- * Nothing else in `webmcp/` needs to change.
- *
- *   [boundary] need engine/layoutEngine.renderWireframe        — Stream 4 (render_page)
- *   [boundary] need engine/accessibilityAuditor.auditAccessibility — Stream 1 (audit_accessibility)
- *   [boundary] need engine/export/{css,dtcg,tailwind,scss,react,page,zip} — Stream 5 (export_*)
- *   [boundary] need engine/export/react.componentCode          — Stream 5 (get_component_code)
- *   [boundary] need layoutStore.setPageSections(pageId, sections) — store action, D-138
+ * Every export here was `null` while the owners were still in flight, and each caller degraded to
+ * an honest "not wired yet" envelope. I-9: all seven owners have landed, so this module now binds
+ * the real implementations and adapts the two whose shapes differ from the tool-facing contract.
+ * The `NOT_WIRED` guards in the tools are gone with them.
  */
 import type { ComponentSpec } from '@/types/components';
 import type { ExportFile } from '@/types/export';
-import type { RenderedSection, Wireframe } from '@/types/layouts';
-import type { TokenPath } from '@/types/tokens';
+import type { ExportFormat } from '@/engine/export/snapshot';
+import { collectExport } from '@/engine/export/snapshot';
+import { buildExport } from '@/engine/export';
+import { exportComponent } from '@/engine/export/react';
 
-/** What `render_page` needs back: the page's sections and the real ComponentSpecs behind them (D-053). */
-export interface WireframeRender {
-  sections: RenderedSection[];
-  specs: ComponentSpec[];
-}
-
-/** Turn 6 §6.2. Moves to engine/accessibilityAuditor.ts when Stream 1 lands. */
-export interface AuditFinding {
-  severity: 'error' | 'warning';
-  rule: string;
-  tokens: TokenPath[];
-  componentId?: string;
-  currentValue: string;
-  requiredValue: string;
-  fix: string;
-}
-export type AuditScope = 'all' | 'components' | 'current-page';
-export const AUDIT_SCOPES: readonly AuditScope[] = ['all', 'components', 'current-page'] as const;
-
-export type TokenExportFormat = 'css' | 'json' | 'tailwind' | 'scss';
-export const TOKEN_EXPORT_FORMATS: readonly TokenExportFormat[] = ['css', 'json', 'tailwind', 'scss'] as const;
-
-export const renderWireframe: ((wireframe: Wireframe, pageId: string) => WireframeRender) | null = null;
-
-export const auditAccessibility: ((scope: AuditScope) => AuditFinding[]) | null = null;
-
-export const exportTokens: ((formats: TokenExportFormat[]) => ExportFile[]) | null = null;
-export const exportComponents: (() => ExportFile[]) | null = null;
-export const exportPage: ((pageId: string) => ExportFile[]) | null = null;
-export const exportFullSystem: (() => ExportFile[]) | null = null;
-
-export const componentCode: ((spec: ComponentSpec) => { filename: string; code: string }) | null = null;
+export type { AuditFinding, AuditScope } from '@/engine/accessibilityAuditor';
+export { AUDIT_SCOPES, auditAccessibility } from '@/engine/accessibilityAuditor';
 
 /**
- * D-138: removing a page component drops its id from the section that held it.
- * `layoutStore` has no action for that yet, so the id is left dangling and the section
- * renders as emptied. Returns whether the detach actually happened.
+ * The agent-facing format vocabulary, which is not the engine's: the tool's schema has said
+ * `json` since Turn 1 (D-175) and the engine calls the same exporter `dtcg`. Renaming either
+ * would change a published contract, so the two names are mapped here and nowhere else.
  */
-export const detachComponentFromPage: ((pageId: string, componentId: string) => boolean) | null = null;
+export type TokenExportFormat = 'css' | 'json' | 'tailwind' | 'scss';
+export const TOKEN_EXPORT_FORMATS: readonly TokenExportFormat[] = ['css', 'json', 'tailwind', 'scss'] as const;
+const ENGINE_FORMAT: Record<TokenExportFormat, ExportFormat> = {
+  css: 'css',
+  json: 'dtcg',
+  tailwind: 'tailwind',
+  scss: 'scss',
+};
 
-/** One line the tools use so the "not wired yet" answer reads the same everywhere. */
-export const NOT_WIRED = (what: string, owner: string): string =>
-  `${what} is not available in this build yet (${owner} lands it).`;
+export const exportTokens = (formats: TokenExportFormat[]): ExportFile[] =>
+  buildExport(
+    collectExport(),
+    'tokens',
+    formats.map((f) => ENGINE_FORMAT[f]),
+  );
+
+export const exportComponents = (): ExportFile[] => buildExport(collectExport(), 'components');
+
+/** The engine's `page` scope emits every rendered page; the tool exports the one it was asked for. */
+export const exportPage = (pageId: string): ExportFile[] => {
+  const snap = collectExport();
+  return buildExport({ ...snap, pages: snap.pages.filter((p) => p.id === pageId) }, 'page');
+};
+
+export const exportFullSystem = (): ExportFile[] => buildExport(collectExport(), 'everything');
+
+/** `get_component_code` wants one file for one spec; the exporter is keyed by type (D-189). */
+export const componentCode = (spec: ComponentSpec): { filename: string; code: string } => {
+  const file = exportComponent(spec.type, collectExport().productName);
+  return { filename: file.path.split('/').pop() ?? file.path, code: file.contents };
+};

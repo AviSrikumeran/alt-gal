@@ -36,7 +36,7 @@ describe('tokenToVars', () => {
     expect(vars['--spacing-16']).toBe('128px');
   });
 
-  it('emits the loaded-face variable for a catalog font (D-120, D-220)', () => {
+  it('emits the loaded-face variable for a catalog font (D-120, D-221)', () => {
     const vars = tokenToVars(DEFAULT_TOKENS);
     expect(vars['--font-body']).toBe('var(--font-inter), system-ui, sans-serif');
     expect(vars['--font-mono']).toBe('var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace');
