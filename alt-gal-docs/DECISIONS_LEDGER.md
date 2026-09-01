@@ -229,8 +229,9 @@ D-210: Amends Turn 1 description: `remove_wireframe` = "Delete a wireframe by id
 D-211: Amends D-058: `UIState` gains `panelSections: Record<'colors'|'typography'|'spacing'|'elevation'|'motion'|'rules', boolean>` (persisted) and `exportFiles: ExportFile[] | null` (transient). `ExportFile` lives in `src/types/export.ts` in the seed.
 D-212: No `require()` anywhere in `src/`; nested CTA styles come from `nestedButtonStyles` in `_shared.ts` (Card, Hero, Navbar, PricingCard, Modal).
 
-Total: 216
+Total: 217
 D-213: SpacingKey = 'unit' | '1' | '2' | '3' | '4' | '5' | '6' | '8' | '10' | '12' | '16'. TokenPath admits spacing.<step>; cssVarFor('spacing.N') → --spacing-N per D-082. tokenToCss emits one var per step (unit × multiplier). Supersedes the D-087 SpacingKey='unit' reading. Reason: D-044/D-082 and the entire style dictionary depend on per-step vars; 87 typecheck errors confirm the type, not the usage, was wrong.
 D-214: tsconfig exclude gains "alt-gal-docs". Reference sources are read, never compiled.
 D-215: Prettier formatting applied repo-wide at seed; ALT_GAL_IMPLEMENTATION.md is reference, not byte-authoritative. Repo wins.
 D-216: React 19 JSX type import in WebMCPBridge; lint script is eslint && prettier --check; consistent-type-imports fixes in Button/componentRenderer/tokenToCss/results; flat eslint.config.mjs carries D-197 rules (.eslintrc obsolete).
+D-217: `UNSET_COLOR` (D-109, 13 grayscale sentinels) is added to `src/utils/defaults.ts` with the Turn 4 values verbatim. It was specified there in Turn 4 but omitted from the seed commit, and both `engine/tokenToCss.ts` (Stream 1, `:root` emission) and `engine/ruleEngine.ts` (Stream 2, `resolveProperty` per D-166) import it. This is the ledger entry the frozen-file rule (§11.2) requires; no other line of `defaults.ts` changes.
