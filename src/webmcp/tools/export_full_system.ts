@@ -1,14 +1,25 @@
-// export_full_system — phases 4 (read-only). D-025, D-028.
+// export_full_system — phase 4 (read-only, untrusted content). D-025, D-028, D-173, D-175.
+// The last tool in the last phase: tokens in every format, the component library, the
+// rendered pages, a README and a package.json — the whole thing as one download.
 import type { ToolDefinition } from '@/types/webmcp';
-const tool: ToolDefinition = {
+import type { ExportSummary } from '@/webmcp/outcomes';
+import { NOT_WIRED, exportFullSystem } from '@/webmcp/pending';
+import { exportDelivery, fail } from '@/webmcp/outcomes';
+import { guard } from '@/webmcp/validate';
+
+const tool: ToolDefinition<Record<string, unknown>, ExportSummary> = {
   name: 'export_full_system',
   title: 'Export System',
   description:
     'Export everything — tokens in all formats, components, pages, README, package.json — as one downloadable bundle. Files open in the export panel; you receive a summary.',
-  inputSchema: { type: 'object', properties: {}, additionalProperties: false }, // STREAM 3: fill
+  inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   phases: [4],
   readOnly: true,
   untrusted: true,
-  execute: () => ({ kind: 'error', code: 'INTERNAL', message: 'export_full_system is not implemented yet.' }), // STREAM 3
+  execute: () =>
+    guard(() => {
+      if (!exportFullSystem) return fail('INTERNAL', NOT_WIRED('The full-system export', 'Stream 5'));
+      return exportDelivery(exportFullSystem(), 'the complete design system');
+    }),
 };
 export default tool;
