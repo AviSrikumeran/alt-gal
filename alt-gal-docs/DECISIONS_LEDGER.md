@@ -234,3 +234,4 @@ D-213: SpacingKey = 'unit' | '1' | '2' | '3' | '4' | '5' | '6' | '8' | '10' | '1
 D-214: tsconfig exclude gains "alt-gal-docs". Reference sources are read, never compiled.
 D-215: Prettier formatting applied repo-wide at seed; ALT_GAL_IMPLEMENTATION.md is reference, not byte-authoritative. Repo wins.
 D-216: React 19 JSX type import in WebMCPBridge; lint script is eslint && prettier --check; consistent-type-imports fixes in Button/componentRenderer/tokenToCss/results; flat eslint.config.mjs carries D-197 rules (.eslintrc obsolete).
+D-219: WebMCPBridge mounted in root layout on main so tools register on every page; Stream 5 keeps this when it rewrites layout.tsx.
