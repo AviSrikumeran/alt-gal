@@ -46,16 +46,10 @@ export const DEFAULT_TOKENS: TokenState = {
   locked: [],
 };
 
-/** Phase-2 gate colors (D-048). */
-export const REQUIRED_COLORS_FOR_COMPONENTS = ['color.primary', 'color.background', 'color.text-primary'] as const;
-export const TOKENS_REQUIRED_FOR_PHASE_2 = 5;
-export const COMPONENTS_REQUIRED_FOR_PHASE_3 = 2;
-
 /**
- * D-109: per-role grayscale sentinels for unset colors. One sentinel for all thirteen would make
- * text invisible on backgrounds; these keep a pre-token canvas legible and obviously "unset".
- * Emitted by tokenToCss; never stored. (D-221: the seed omitted this constant, which Turn 4 §2.3
- * places in this file and tokenToCss, the auditor, and the canvas all import.)
+ * Per-role grayscale sentinels for null colors (D-109). Emitted by `tokenToCss`/`tokenToVars` and resolved by
+ * `ruleEngine.resolveProperty` (D-166). One sentinel for every role would make text invisible on backgrounds;
+ * these keep an untokenised canvas legible and obviously unset.
  */
 export const UNSET_COLOR: Record<SemanticColorRole, string> = {
   primary: 'hsl(0, 0%, 62%)',
@@ -72,3 +66,8 @@ export const UNSET_COLOR: Record<SemanticColorRole, string> = {
   'text-muted': 'hsl(0, 0%, 58%)',
   border: 'hsl(0, 0%, 84%)',
 };
+
+/** Phase-2 gate colors (D-048). */
+export const REQUIRED_COLORS_FOR_COMPONENTS = ['color.primary', 'color.background', 'color.text-primary'] as const;
+export const TOKENS_REQUIRED_FOR_PHASE_2 = 5;
+export const COMPONENTS_REQUIRED_FOR_PHASE_3 = 2;

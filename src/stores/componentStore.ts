@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ComponentSpec, ComponentSummary } from '@/types/components';
+import { primaryText } from '@/components/library/content';
 
 /** Owns every ComponentSpec on the canvas, including page-owned ones (D-053). */
 export interface ComponentState {
@@ -48,7 +49,15 @@ export const useComponentStore = create<ComponentStore>()(
       get: (id) => get().components.find((c) => c.id === id),
       list: () => get().components,
       listLoose: () => get().components.filter((c) => c.pageId === null),
-      summaries: () => /* STREAM 2: implement (uses content.ts primaryText) */ [],
+      summaries: () =>
+        get().components.map((c) => ({
+          id: c.id,
+          type: c.type,
+          variant: c.variant,
+          size: c.size,
+          label: primaryText(c.type, c.content),
+          pageId: c.pageId,
+        })),
       count: () => get().components.length,
       ids: () => get().components.map((c) => c.id),
       reset: () => set({ components: [] }),

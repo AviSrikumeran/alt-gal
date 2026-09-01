@@ -39,3 +39,10 @@
   padding: 0;
   display: block;
 }
+
+/* ComponentGrid — the phase 2/3 specimen stack (D-096). Studio spacing, never user tokens. */
+.alt-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
