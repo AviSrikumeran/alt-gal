@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Alternative Galaxy',
-  description: 'Design systems for humans and agents.',
+  title: 'Alternative Galaxy — Design systems for humans and agents',
+  description:
+    "A design studio where the AI agent's tools are a function of the work's state. Set tokens, write rules, and let any WebMCP agent build inside them.",
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
