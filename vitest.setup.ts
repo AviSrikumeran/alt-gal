@@ -29,12 +29,17 @@ class MemoryStorage implements Storage {
 
 if (typeof globalThis.localStorage?.setItem !== 'function') {
   const storage = new MemoryStorage();
-  for (const target of [globalThis, window] as unknown as Record<string, unknown>[]) {
+  // `window` is absent in the node-environment suites (export.test.ts), so it is only
+  // patched when it exists. jsdom aliases the two, but defining both is harmless.
+  const targets: Record<string, unknown>[] = [globalThis as unknown as Record<string, unknown>];
+  if (typeof window !== 'undefined') targets.push(window as unknown as Record<string, unknown>);
+  for (const target of targets) {
     Object.defineProperty(target, 'localStorage', { value: storage, configurable: true, writable: true });
   }
 }
 
 afterEach(() => {
-  cleanup();
+  // cleanup() needs a document; the node-environment suites render with react-dom/server.
+  if (typeof document !== 'undefined') cleanup();
   localStorage.clear();
 });
