@@ -1,4 +1,4 @@
-import type { TokenState } from '@/types/tokens';
+import type { SemanticColorRole, TokenState } from '@/types/tokens';
 
 export const SPACING_SCALE: readonly number[] = [1, 2, 3, 4, 5, 6, 8, 10, 12, 16]; // D-082
 
@@ -50,3 +50,25 @@ export const DEFAULT_TOKENS: TokenState = {
 export const REQUIRED_COLORS_FOR_COMPONENTS = ['color.primary', 'color.background', 'color.text-primary'] as const;
 export const TOKENS_REQUIRED_FOR_PHASE_2 = 5;
 export const COMPONENTS_REQUIRED_FOR_PHASE_3 = 2;
+
+/**
+ * D-109: per-role grayscale sentinels for unset colors. One sentinel for all thirteen would make
+ * text invisible on backgrounds; these keep a pre-token canvas legible and obviously "unset".
+ * Emitted by tokenToCss; never stored. (D-221: the seed omitted this constant, which Turn 4 §2.3
+ * places in this file and tokenToCss, the auditor, and the canvas all import.)
+ */
+export const UNSET_COLOR: Record<SemanticColorRole, string> = {
+  primary: 'hsl(0, 0%, 62%)',
+  secondary: 'hsl(0, 0%, 66%)',
+  accent: 'hsl(0, 0%, 70%)',
+  danger: 'hsl(0, 0%, 58%)',
+  warning: 'hsl(0, 0%, 64%)',
+  success: 'hsl(0, 0%, 60%)',
+  muted: 'hsl(0, 0%, 88%)',
+  background: 'hsl(0, 0%, 97%)',
+  surface: 'hsl(0, 0%, 100%)',
+  'text-primary': 'hsl(0, 0%, 20%)',
+  'text-secondary': 'hsl(0, 0%, 42%)',
+  'text-muted': 'hsl(0, 0%, 58%)',
+  border: 'hsl(0, 0%, 84%)',
+};
