@@ -29,6 +29,12 @@ function seedSource(source: WebMCPSource, toolCount = 4): void {
   Object.assign(useWebMCPStatusStore.getInitialState(), { source, toolCount });
 }
 
+/** D-244: 'none' before and after detection settles are two different screens. */
+function seedResolution(resolved: boolean, reason: 'insecure-context' | 'polyfill-failed' | null = null): void {
+  useWebMCPStatusStore.setState({ resolved, reason });
+  Object.assign(useWebMCPStatusStore.getInitialState(), { resolved, reason });
+}
+
 function seedOnboarding(dismissed: boolean): void {
   useUIStore.setState({ onboardingDismissed: dismissed });
   Object.assign(useUIStore.getInitialState(), { onboardingDismissed: dismissed });
@@ -45,12 +51,14 @@ beforeEach(() => {
   useLogStore.getState().clear();
   seedOnboarding(true);
   seedSource('none');
+  seedResolution(false);
   seedPhase(0);
 });
 
 afterEach(() => {
   seedPhase(0);
   seedSource('none');
+  seedResolution(false);
   seedOnboarding(false);
 });
 
@@ -117,6 +125,23 @@ describe('StudioShell', () => {
     expect(at(0)).toContain('Open this page in an agent browser to collaborate.');
     seedSource('native');
     expect(at(0)).toContain('What can you do on this page?');
+  });
+
+  it('stays quiet about the agent surface while detection is still running (D-244)', () => {
+    expect(at(0)).not.toContain('No agent can reach this page.');
+  });
+
+  it('names the cause and offers a retry once the source resolves none (D-244)', () => {
+    seedResolution(true, 'insecure-context');
+    const html = at(0);
+    expect(html).toContain('No agent can reach this page.');
+    expect(html).toContain('not a secure context');
+    expect(html).toContain('Retry detection');
+  });
+
+  it('falls back to the unknown cause when none was recorded (D-244)', () => {
+    seedResolution(true, null);
+    expect(at(0)).toContain('the polyfill did not install');
   });
 
   it('renders the onboarding banner until it is dismissed (D-156)', () => {

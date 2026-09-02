@@ -2,7 +2,8 @@
 
 .alt-studio {
   display: grid;
-  grid-template-rows: 44px minmax(0, 1fr) 28px;
+  /* head (phase bar + D-244's banner, which is usually absent) / body / status bar */
+  grid-template-rows: auto minmax(0, 1fr) 28px;
   height: 100vh;
 }
 
@@ -43,6 +44,7 @@
 /* ---- phase bar ----------------------------------------------------------- */
 
 .alt-phasebar {
+  height: 44px;
   display: grid;
   grid-template-columns: 200px 1fr 200px;
   align-items: center;
@@ -604,4 +606,39 @@
 }
 .alt-sheet__rows dd {
   margin: 0;
+}
+
+/* ---- agent-unavailable banner (D-244) ------------------------------------ */
+
+.alt-unavailable {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--studio-err) 14%, var(--studio-bg));
+  border-bottom: 1px solid var(--studio-err);
+  color: var(--studio-text);
+}
+.alt-unavailable__text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.alt-unavailable__title {
+  color: var(--studio-err);
+  font-weight: 600;
+}
+.alt-unavailable__cause {
+  color: var(--studio-text);
+}
+.alt-unavailable__note {
+  color: var(--studio-text-muted);
+}
+.alt-unavailable .alt-btn {
+  margin-left: auto;
+  flex: none;
 }

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLogStore } from '@/stores/logStore';
 import { usePhaseStore } from '@/stores/phaseStore';
 import AgentLog from './AgentLog';
+import AgentUnavailableBanner from './AgentUnavailableBanner';
 import Canvas from './Canvas';
 import PhaseIndicator from './PhaseIndicator';
 import ShortcutsSheet from './ShortcutsSheet';
@@ -78,7 +79,10 @@ export default function StudioShell() {
 
       <div className="alt-studio">
         <TokenStyleInjectorSlot />
-        <PhaseIndicator />
+        <div className="alt-studio__head">
+          <PhaseIndicator />
+          <AgentUnavailableBanner />
+        </div>
         <div className="alt-studio__body">
           <TokenPanelSlot />
           <Canvas />

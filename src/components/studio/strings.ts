@@ -104,6 +104,19 @@ export const S = {
     `${tokens} tokens · ${components} components · ${pages} page${pages === 1 ? '' : 's'}`,
   toolInspector: 'Tool Inspector',
 
+  // agent-unavailable banner (D-244)
+  unavailableTitle: 'No agent can reach this page.',
+  unavailableCause: {
+    'insecure-context':
+      'This page is not a secure context. WebMCP is only exposed over https:// or on localhost — a LAN IP or a plain-http tunnel will never work.',
+    'polyfill-failed': 'The WebMCP polyfill could not be installed, so document.modelContext was never created.',
+    unknown: 'The browser exposed no document.modelContext and the polyfill did not install.',
+  } as const,
+  unavailableConsequence:
+    'No tools are registered. Tokens, components, and export still work — only the agent half is gone.',
+  unavailableRetry: 'Retry detection',
+  unavailableRetrying: 'Detecting…',
+
   // export panel (D-174)
   exportTitle: 'Export',
   exportTabs: { tokens: 'Tokens', components: 'Components', page: 'Page', everything: 'Everything' } as const,
