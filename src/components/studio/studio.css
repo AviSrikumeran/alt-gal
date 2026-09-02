@@ -126,7 +126,7 @@
 }
 .alt-step[data-state='current'] .alt-step__pill {
   background: var(--studio-accent);
-  color: var(--studio-on-accent);
+  color: #0f1117;
   font-weight: 600;
   transform: scale(1);
 }

@@ -15,14 +15,14 @@ export default function OpengraphImage() {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        background: '#111113',
-        color: '#EDEEF0',
+        background: '#0F1117',
+        color: '#E6E8EF',
         padding: 72,
         fontFamily: 'sans-serif',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 28, color: '#B0B4BA' }}>
-        <div style={{ width: 14, height: 14, borderRadius: 7, background: '#FF3D9E' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 28, color: '#8B91A1' }}>
+        <div style={{ width: 14, height: 14, borderRadius: 7, background: '#FF7AC6' }} />
         alt.gal
       </div>
 
@@ -30,7 +30,7 @@ export default function OpengraphImage() {
         <div style={{ fontSize: 68, lineHeight: 1.1, letterSpacing: -1.5, maxWidth: 940 }}>
           Design systems for humans and agents
         </div>
-        <div style={{ fontSize: 30, color: '#B0B4BA', maxWidth: 900 }}>
+        <div style={{ fontSize: 30, color: '#8B91A1', maxWidth: 900 }}>
           The agent&apos;s tools are a function of the work&apos;s state.
         </div>
       </div>
@@ -44,8 +44,8 @@ export default function OpengraphImage() {
               padding: '10px 22px',
               borderRadius: 22,
               background: i < 3 ? 'rgba(255, 122, 198, 0.16)' : 'transparent',
-              border: i < 3 ? '1px solid #FF3D9E' : '1px solid #43484E',
-              color: i < 3 ? '#FF3D9E' : '#696E77',
+              border: i < 3 ? '1px solid #FF7AC6' : '1px solid #343948',
+              color: i < 3 ? '#FF7AC6' : '#5C6270',
             }}
           >
             {step}
