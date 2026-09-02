@@ -1,26 +1,45 @@
-/* globals.css — the studio's own palette and primitives (D-142, D-143, D-144).
+/* globals.css — the studio's own palette and primitives (D-142, D-143, D-144, D-251, D-252).
    Nothing here uses a user token: the chrome is dark, always, and never inherits the user's theme. */
 
 :root {
-  --studio-bg: #0f1117; /* app background, phase bar */
-  --studio-panel: #15171e; /* token panel, agent log */
-  --studio-surface: #1c1f29; /* specimen chrome, popovers, inputs */
-  --studio-border: #262a35;
-  --studio-border-strong: #343948;
-  --studio-text: #e6e8ef;
-  --studio-text-muted: #8b91a1;
-  --studio-text-faint: #5c6270;
-  --studio-accent: #ff7ac6; /* alt.gal pink: focus, selection, active phase, primary buttons */
-  --studio-accent-soft: rgba(255, 122, 198, 0.16);
-  --studio-agent: #7ce0ff; /* agent-authored entries and the agent dot */
+  /* Radix Colors 3.0 — slateDark, verbatim (D-251). The chrome's only neutral ramp: every
+     --studio-* grey below is an alias onto a step, so a shade is never invented at a call site. */
+  --studio-1: #111113;
+  --studio-2: #18191b;
+  --studio-3: #212225;
+  --studio-4: #272a2d;
+  --studio-5: #2e3135;
+  --studio-6: #363a3f;
+  --studio-7: #43484e;
+  --studio-8: #5a6169;
+  --studio-9: #696e77;
+  --studio-10: #777b84;
+  --studio-11: #b0b4ba;
+  --studio-12: #edeef0;
+
+  /* Semantic aliases. Radix's step meanings, in the order the studio stacks its surfaces:
+     app < panels < canvas < inset surfaces, then separator / border / solid / text. */
+  --studio-bg: var(--studio-1); /* app background, phase bar */
+  --studio-panel: var(--studio-2); /* token panel, agent log */
+  --studio-canvas: var(--studio-3); /* the centre stage behind specimens */
+  --studio-surface: var(--studio-4); /* specimen chrome, popovers, inputs */
+  --studio-canvas-dot: var(--studio-6);
+  --studio-border: var(--studio-6); /* separators */
+  --studio-border-strong: var(--studio-7); /* interactive element borders */
+  --studio-text: var(--studio-12);
+  --studio-text-muted: var(--studio-11);
+  --studio-text-faint: var(--studio-9);
+
+  --studio-accent: #ff3d9e; /* alt.gal pink (D-252): focus, selection, active phase, primary buttons */
+  --studio-accent-soft: rgba(255, 61, 158, 0.16);
+  --studio-on-accent: var(--studio-1); /* 5.8:1 on the accent; white is only 3.3:1 */
+  --studio-agent: #7ce0ff; /* agent-authored entries and the agent dot — a hue, not a second accent */
   --studio-agent-soft: rgba(124, 224, 255, 0.1);
   --studio-ok: #3ddc97;
   --studio-warn: #ffb547;
   --studio-err: #ff5c7a;
   --studio-font: var(--font-geist);
   --studio-font-mono: var(--font-geist-mono);
-  --studio-canvas: #1a1d26;
-  --studio-canvas-dot: #2a2e3a;
   --studio-radius: 8px;
   --studio-radius-lg: 12px;
 
@@ -130,7 +149,7 @@ textarea {
 .alt-btn[data-kind='primary'] {
   background: var(--studio-accent);
   border-color: var(--studio-accent);
-  color: #0f1117;
+  color: var(--studio-on-accent);
   font-weight: 600;
 }
 .alt-btn[data-kind='primary']:hover:not(:disabled) {

@@ -264,3 +264,15 @@ D-237 (I-10): `pretypecheck` runs `next typegen` so `pnpm typecheck` cannot run 
 D-238: `webmcp/__tests__/tools.test.ts`'s phase-0 case was written against Stream 1's stub token store and reset only components and layouts. With the real store merged, tokens from earlier cases in the file held `computePhase()` at 2; it now resets the token store too.
 D-239: `components/studio/integration.tsx`'s six placeholder slots are wired to the real components now that every owner has landed: TokenStyleInjector and TokenPanel (Stream 1), ToolInspector and WebMCPStatusBar (Stream 3), ComponentGrid (Stream 2), WireframePreview/PagePreview (Stream 4). The slot module stays, because StudioShell and Canvas are written against those names. Three call-site consequences: `WireframeViewSlot` takes the wireframe's rendered page and shows PagePreview once it exists (D-137); `ComponentGridSlot` drops its `specs` prop because ComponentGrid selects the loose components itself (D-096); and the status bar's landmark is Stream 3's `<footer class="alt-status">` with its own `webmcp-panels.css`, so studio.css's placeholder-only `.alt-statusbar` and `.alt-slot` rules are deleted and StudioShell's landmark assertion names the real class.
 
+## Design system pass — studio chrome only (branch fix-b)
+
+Numbered from D-251 to leave D-240..D-250 for the concurrent QA-audit-fix branch, which had
+reached D-243 when this branch was cut from main at D-239. Renumber down at merge if it lands
+fewer. Scope for every entry below: studio chrome. `src/engine`, `src/webmcp/tools`, `src/stores`,
+`src/types`, and `components/library/**` styles are untouched, and no user token changes.
+
+D-251: The chrome's neutral ramp is Radix Colors 3.0 `slateDark`, pasted verbatim into `globals.css` as `--studio-1`..`--studio-12`. Every `--studio-*` grey is now an alias onto a step (bg=1, panel=2, canvas=3, surface=4, border=6, border-strong=7, text-faint=9, text-muted=11, text=12), so no call site invents a shade. Supersedes the nine hand-mixed hexes D-142 shipped; the stacking order they encoded (app < panels < canvas < inset surfaces) is preserved. `canvas.css`'s five private `--wf-*` greys — a second, unrelated ramp — are aliased onto steps 5/6/8/10/11 for the same reason.
+
+D-252: The accent is `#ff3d9e`, replacing `#ff7ac6` everywhere the chrome names one: `--studio-accent` and `--studio-accent-soft` in `globals.css`, the hardcoded `var()` fallbacks in `webmcp-panels.css` (which is written to survive globals.css being absent), the OG card, and `app/icon.svg`. `--studio-agent` (cyan) is unchanged — it marks authorship, not emphasis, and D-143's human/agent distinction depends on the two reading as different things. New `--studio-on-accent: var(--studio-1)` replaces the three `#0f1117` literals that sat on accent fills: dark-on-pink measures 5.76:1, white-on-pink only 3.27:1.
+
+Total: 252

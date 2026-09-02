@@ -55,11 +55,11 @@
 
 .alt-wf,
 .alt-page {
-  --wf-fill: #2a2e3a;
-  --wf-border: #4a5060;
-  --wf-inner: #33384a;
-  --wf-label: #8b91a1;
-  --wf-placeholder: #6b7180;
+  --wf-fill: var(--studio-5);
+  --wf-border: var(--studio-8);
+  --wf-inner: var(--studio-6);
+  --wf-label: var(--studio-11);
+  --wf-placeholder: var(--studio-10);
 }
 .alt-wf {
   display: flex;
