@@ -274,4 +274,8 @@ D-241: The studio chrome's neutral ramp is Radix Colors 3.0 `slateDark`, pasted 
 
 D-242: The accent is `#ff3d9e`, replacing `#ff7ac6` everywhere the chrome names one: `--studio-accent` and `--studio-accent-soft` in `globals.css`, the hardcoded `var()` fallbacks in `webmcp-panels.css` (which is written to survive globals.css being absent), and the OG card. `--studio-agent` (cyan) is unchanged — it marks authorship, not emphasis, and D-143's human/agent distinction depends on the two reading as different things. New `--studio-on-accent: var(--studio-1)` replaces the three `#0f1117` literals that sat on accent fills: dark-on-pink is 5.76:1, white-on-pink only 3.27:1, so the choice is measured rather than assumed.
 
-Total: 242
+## QA audit fixes, continued (alt-gal-docs/AUDIT.md)
+
+D-243 (audit fix #2): `refreshCount` falls back to the registered map when `ctx.getTools()` throws, is absent, or returns a non-list, instead of swallowing the failure and leaving `toolCount` frozen at its last value. D-016 is unchanged in intent — the host's own answer is still the source, and is still preferred — but it was also the *only* source, and the number it feeds is demo moment (a). The fallback reports what the hook just registered, which is the honest second-best. Covered by `webmcp/__tests__/registration.test.tsx`, which drives the real hook against the fake host with `getTools` rejecting and with `getTools` missing.
+
+Total: 243

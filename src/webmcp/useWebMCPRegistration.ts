@@ -83,13 +83,23 @@ export function useWebMCPRegistration(): void {
     const registered = registeredRef.current;
     const status = useWebMCPStatusStore.getState();
 
+    /**
+     * D-016 wants the browser's own answer, not a hand-tracked number, so `getTools()` is the
+     * source. But it is the *only* source, its failure was swallowed, and the number it feeds is
+     * the thing being demonstrated — a host without `getTools` froze the count at its last value
+     * with nothing on screen to say so. The registered map is the honest second-best: it is what
+     * this hook just asked the host to hold.
+     */
     const refreshCount = async () => {
+      let names: string[];
       try {
-        const tools = await ctx.getTools(); // D-016
-        if (!epoch.signal.aborted) useWebMCPStatusStore.getState().setTools(tools.map((t) => t.name));
+        const tools = await ctx.getTools();
+        if (!Array.isArray(tools)) throw new TypeError('getTools() did not return a list');
+        names = tools.map((t) => t.name);
       } catch {
-        /* getTools unsupported on this host: count stays at last known */
+        names = [...registered.keys()];
       }
+      if (!epoch.signal.aborted) useWebMCPStatusStore.getState().setTools(names);
     };
 
     const sync = async () => {
