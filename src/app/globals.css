@@ -1,4 +1,4 @@
-/* globals.css — the studio's own palette and primitives (D-142, D-143, D-144, D-251, D-252).
+/* globals.css — the studio's own palette and primitives (D-142, D-143, D-144, D-251, D-252, D-253).
    Nothing here uses a user token: the chrome is dark, always, and never inherits the user's theme. */
 
 :root {
@@ -38,8 +38,8 @@
   --studio-ok: #3ddc97;
   --studio-warn: #ffb547;
   --studio-err: #ff5c7a;
-  --studio-font: var(--font-geist);
-  --studio-font-mono: var(--font-geist-mono);
+  --studio-font: var(--font-studio-sans);
+  --studio-font-mono: var(--font-studio-mono);
   --studio-radius: 8px;
   --studio-radius-lg: 12px;
 

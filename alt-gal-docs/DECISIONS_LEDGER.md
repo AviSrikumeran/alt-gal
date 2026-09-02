@@ -275,4 +275,6 @@ D-251: The chrome's neutral ramp is Radix Colors 3.0 `slateDark`, pasted verbati
 
 D-252: The accent is `#ff3d9e`, replacing `#ff7ac6` everywhere the chrome names one: `--studio-accent` and `--studio-accent-soft` in `globals.css`, the hardcoded `var()` fallbacks in `webmcp-panels.css` (which is written to survive globals.css being absent), the OG card, and `app/icon.svg`. `--studio-agent` (cyan) is unchanged — it marks authorship, not emphasis, and D-143's human/agent distinction depends on the two reading as different things. New `--studio-on-accent: var(--studio-1)` replaces the three `#0f1117` literals that sat on accent fills: dark-on-pink measures 5.76:1, white-on-pink only 3.27:1.
 
-Total: 252
+D-253: Amends D-143's choice of face, not its reasoning. Studio chrome type is Instrument Sans with IBM Plex Mono, loaded in `app/layout.tsx` via `next/font/google` under `--font-studio-sans` / `--font-studio-mono`. The chrome-private variable names matter: `IBM Plex Mono` is also entry 13 of the user's catalog (D-119) under `--font-ibm-plex-mono`, and the chrome must not read a variable `fontLoader.ts` owns — same file, different declaration. `display: 'optional'` per the design system: a face that misses its block window is skipped for that load rather than swapped in under the operator's cursor. Instrument Sans is variable so it declares no `weight`; IBM Plex Mono is not, and the chrome asks for 400/500/600.
+
+Total: 253
