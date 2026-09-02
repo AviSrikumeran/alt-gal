@@ -53,14 +53,16 @@
 .alt-phasebar__brand {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-size: 13px;
 }
-.alt-phasebar__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--studio-accent);
+.alt-pinwheel {
+  flex: none;
+  color: var(--studio-accent);
+}
+.alt-phasebar__brand .alt-mono {
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 .alt-phasebar__status {
   display: flex;

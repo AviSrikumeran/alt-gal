@@ -277,4 +277,6 @@ D-252: The accent is `#ff3d9e`, replacing `#ff7ac6` everywhere the chrome names 
 
 D-253: Amends D-143's choice of face, not its reasoning. Studio chrome type is Instrument Sans with IBM Plex Mono, loaded in `app/layout.tsx` via `next/font/google` under `--font-studio-sans` / `--font-studio-mono`. The chrome-private variable names matter: `IBM Plex Mono` is also entry 13 of the user's catalog (D-119) under `--font-ibm-plex-mono`, and the chrome must not read a variable `fontLoader.ts` owns — same file, different declaration. `display: 'optional'` per the design system: a face that misses its block window is skipped for that load rather than swapped in under the operator's cursor. Instrument Sans is variable so it declares no `weight`; IBM Plex Mono is not, and the chrome asks for 400/500/600.
 
-Total: 253
+D-254: The alt.gal mark is a four-blade pinwheel — each blade a half-disc of radius 6.5 seated on a spoke of a 32-unit box, rotated 90° apart. It replaces the `.alt-phasebar__dot` in the header (`components/studio/Pinwheel.tsx`, tinted from `--studio-accent` through `currentColor`) and the plain circle in `app/icon.svg`, which Next serves as the favicon under the `icon` file convention. The two carry the same path data twice rather than sharing a module: a favicon is fetched as a standalone document and can neither import React nor read a CSS variable.
+
+Total: 254
