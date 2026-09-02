@@ -149,7 +149,9 @@ export default function Canvas() {
         >
           {active ? (
             <ErrorBoundary>
-              <WireframeViewSlot wireframe={active} page={activePage} />
+              {/* Keyed by wireframe: the render transition is per-wireframe state (D-137), and
+                  switching tabs must not read as a fresh render of the tab you switched to. */}
+              <WireframeViewSlot key={active.id} wireframe={active} page={activePage} />
             </ErrorBoundary>
           ) : loose.length > 0 ? (
             <ErrorBoundary>

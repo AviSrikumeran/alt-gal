@@ -117,15 +117,21 @@ export interface PageViewProps {
   theme: Theme;
   selectedId: string | null;
   onSelect: (id: string) => void;
+  /**
+   * D-137's page-in half. Set only when this page has just been rendered — the animation is the
+   * payoff of the render, and firing it on a plain page load (which is what a hardcoded
+   * `data-rendering="in"` did) spends it on nothing.
+   */
+  entering?: boolean;
 }
 
 /** Pure page renderer. `PagePreview` wires it to the stores; the exporter mirrors it (D-172). */
-export function PageView({ page, components, theme, selectedId, onSelect }: PageViewProps) {
+export function PageView({ page, components, theme, selectedId, onSelect, entering = false }: PageViewProps) {
   return (
     <div
       data-alt-page
       className={theme === 'dark' ? 'alt-page dark' : 'alt-page'}
-      data-rendering="in"
+      data-rendering={entering ? 'in' : undefined}
       aria-label={page.title}
     >
       <style>{PAGE_SECTION_CSS}</style>
@@ -143,10 +149,19 @@ export function PageView({ page, components, theme, selectedId, onSelect }: Page
   );
 }
 
-export function PagePreview({ page }: { page: RenderedPage }) {
+export function PagePreview({ page, entering = false }: { page: RenderedPage; entering?: boolean }) {
   const components = useComponentStore((s) => s.components);
   const theme = useUIStore((s) => s.theme);
   const selectedId = useUIStore((s) => s.selectedComponentId);
   const select = useUIStore((s) => s.select);
-  return <PageView page={page} components={components} theme={theme} selectedId={selectedId} onSelect={select} />;
+  return (
+    <PageView
+      page={page}
+      components={components}
+      theme={theme}
+      selectedId={selectedId}
+      onSelect={select}
+      entering={entering}
+    />
+  );
 }

@@ -288,9 +288,11 @@
 .alt-wf[data-rendering='out'] .alt-wf__add {
   opacity: 0;
 }
+/* The 260ms head start this delay used to carry is now real time: WireframeViewSlot holds the
+   wireframe on screen for the length of alt-wf-out before it swaps in the page. */
 .alt-page[data-rendering='in'] .alt-page__section {
   animation: alt-page-in 320ms ease-out backwards;
-  animation-delay: calc(260ms + var(--i, 0) * 60ms);
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 @media (prefers-reduced-motion: reduce) {
   .alt-wf[data-rendering='out'] .alt-wf__box,
