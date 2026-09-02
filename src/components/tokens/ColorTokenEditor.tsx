@@ -11,8 +11,9 @@ import type { SemanticColorRole, TokenPath } from '@/types/tokens';
 import { SEMANTIC_COLOR_ROLES } from '@/types/tokens';
 import type { HSL, PaletteStrategy } from '@/utils/colorUtils';
 import { generatePalette, parseColor, toHSLString, toHex } from '@/utils/colorUtils';
-import { paletteToValues, useTokenStore } from '@/stores/tokenStore';
-import { commitTokens, useTokenEditor } from './useTokenEditor';
+import { useTokenStore } from '@/stores/tokenStore';
+import { fillFromPrimary as applyFillFromPrimary } from './fillFromPrimary';
+import { useTokenEditor } from './useTokenEditor';
 import { useAgentTouchedTokens } from './_agentFlash';
 import { Row } from './_controls';
 import LockToggle from './LockToggle';
@@ -64,15 +65,10 @@ export default function ColorTokenEditor() {
   const primary = colors.primary ? parseColor(colors.primary) : null;
   const proposals = primary ? generatePalette(primary, strategy) : null;
 
+  // The palette algorithm, the lock filter, and the single log entry live in fillFromPrimary.ts,
+  // so this button and the phase-1 empty state's CTA (`alt:fill-from-primary`) are one path.
   const fillFromPrimary = () => {
-    if (!proposals) return;
-    const locked = new Set(useTokenStore.getState().locked);
-    const values = paletteToValues(proposals);
-    for (const role of SEMANTIC_COLOR_ROLES) {
-      // The human's locks bind the fill too — one click should never overwrite a padlocked slot.
-      if (locked.has(`color.${role}`)) delete values[`color.${role}`];
-    }
-    commitTokens('ui.fill_from_primary', values);
+    applyFillFromPrimary(strategy);
   };
 
   return (

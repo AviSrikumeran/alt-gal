@@ -30,6 +30,9 @@ interface AgentSubmitEvent extends SubmitEvent {
   respondWith?(response: Promise<string>): void;
 }
 
+/** The `alt:focus-primary` listener (useStudioEvents) reaches this input by id; it owns the CTA. */
+export const PRIMARY_COLOR_INPUT_ID = 'tk-primary-value';
+
 const DESCRIPTION =
   'Propose a primary brand color for the human to apply. Fill it with an hsl() or hex value; the human clicks Apply.';
 
@@ -99,6 +102,7 @@ export default function PrimaryColorForm() {
         aria-hidden="true"
       />
       <input
+        id={PRIMARY_COLOR_INPUT_ID}
         className="tk-hex"
         type="text"
         name="value"

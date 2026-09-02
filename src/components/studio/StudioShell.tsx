@@ -12,6 +12,7 @@ import { StatusBarSlot, TokenPanelSlot, TokenStyleInjectorSlot, ToolInspectorSlo
 import { undoEntry } from '@/engine/undo';
 import { pushToast } from './toastStore';
 import { useShortcuts } from './useShortcuts';
+import { useStudioEvents } from './useStudioEvents';
 import { DEMO_URL, S } from './strings';
 import '@/components/library/library.css';
 import './studio.css';
@@ -60,6 +61,7 @@ export default function StudioShell() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const showSheet = useCallback(() => setSheetOpen(true), []);
   useShortcuts(showSheet);
+  useStudioEvents(); // D-240: the four alt:* CTAs
   useOverwriteToast();
   usePhaseDownToast();
 
