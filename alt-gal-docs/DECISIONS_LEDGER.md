@@ -279,4 +279,6 @@ D-253: Amends D-143's choice of face, not its reasoning. Studio chrome type is I
 
 D-254: The alt.gal mark is a four-blade pinwheel — each blade a half-disc of radius 6.5 seated on a spoke of a 32-unit box, rotated 90° apart. It replaces the `.alt-phasebar__dot` in the header (`components/studio/Pinwheel.tsx`, tinted from `--studio-accent` through `currentColor`) and the plain circle in `app/icon.svg`, which Next serves as the favicon under the `icon` file convention. The two carry the same path data twice rather than sharing a module: a favicon is fetched as a standalone document and can neither import React nor read a CSS variable.
 
-Total: 254
+D-255 (AUDIT.md fix #7): the two `alt.gal/#demo` links are hidden behind JSX comments in `StudioShell.tsx` and `OnboardingBanner.tsx`, and `DEMO_URL` itself is commented out in `strings.ts` with the restore instruction above it. Hidden rather than repointed: `alt.gal` is not deployed (D-191) and D-201's unlisted YouTube URL does not exist yet, so there is no target to point at and a dead link in the first screen a judge sees is worse than no link. `S.smallScreen` loses its trailing "or watch the 90-second demo" clause, which would otherwise promise a link that is no longer rendered; `S.onboardingDemo` is left in place for the restore.
+
+Total: 255

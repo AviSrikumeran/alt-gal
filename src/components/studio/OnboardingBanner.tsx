@@ -6,7 +6,7 @@ import { useUIStore } from '@/stores/uiStore';
 import { generatePalette, toHSLString } from '@/utils/colorUtils';
 import { commitHuman } from '@/engine/commit';
 import { pushToast } from './toastStore';
-import { DEMO_URL, S } from './strings';
+import { S } from './strings';
 
 /** D-157: the exact example set. Tokens only — never components, never pages. */
 const EXAMPLE_PRIMARY = { h: 250, s: 84, l: 60 };
@@ -72,9 +72,11 @@ export default function OnboardingBanner() {
         rules; an agent builds inside them, using only the tools the current phase allows.
       </p>
       <div className="alt-onboarding__actions">
+        {/* D-255: the demo link is hidden until a real URL exists.
         <a className="alt-btn" href={DEMO_URL} target="_blank" rel="noreferrer">
           {S.onboardingDemo}
         </a>
+        */}
         <button type="button" className="alt-btn" onClick={loadExample}>
           {S.onboardingExample}
         </button>

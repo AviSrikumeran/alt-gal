@@ -131,8 +131,7 @@ export const S = {
     'Generate a hero and a pricing table, then sketch a landing page.',
   ],
 
-  smallScreen:
-    'Alternative Galaxy is a desktop studio. Open it in a window at least 1024px wide, or watch the 90-second demo.',
+  smallScreen: 'Alternative Galaxy is a desktop studio. Open it in a window at least 1024px wide.',
 
   // error boundary (D-205)
   errorTitle: 'Something broke in the studio.',
@@ -148,4 +147,10 @@ export const S = {
   shortcutsTitle: 'Keyboard shortcuts',
 } as const;
 
-export const DEMO_URL = 'https://alt.gal/#demo';
+/**
+ * D-255 (audit fix #7): the demo link is hidden, not repointed. `alt.gal` is not deployed
+ * (D-191 starts DNS separately) and D-201 puts the demo on an unlisted YouTube URL that does not
+ * exist yet, so `alt.gal/#demo` has no owner and both call sites went nowhere. Restore by putting
+ * the real URL here and uncommenting the two blocks that name `DEMO_URL`.
+ */
+// export const DEMO_URL = '';
