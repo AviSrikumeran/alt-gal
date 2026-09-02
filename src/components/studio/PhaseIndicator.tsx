@@ -1,6 +1,8 @@
 'use client';
 import { PHASE_DEFINITIONS } from '@/types/phase';
-import { usePhaseStore } from '@/stores/phaseStore';
+import { useComponentStore } from '@/stores/componentStore';
+import { nextPhaseFrom, usePhaseStore } from '@/stores/phaseStore';
+import { useTokenStore } from '@/stores/tokenStore';
 import { useWebMCPStatusStore } from '@/stores/webmcpStatusStore';
 import { ALL_TOOL_NAMES } from '@/webmcp/toolPhaseMap';
 import { PHASE_STEPS, S, WORDMARK } from './strings';
@@ -12,9 +14,14 @@ import { PHASE_STEPS, S, WORDMARK } from './strings';
  */
 export default function PhaseIndicator() {
   const phase = usePhaseStore((s) => s.currentPhase);
-  // Read, don't subscribe: nextPhase() builds a fresh object, which useSyncExternalStore would
-  // read as a changed snapshot on every render. It only ever changes when the phase does.
-  const next = usePhaseStore.getState().nextPhase();
+  // D-246: `.missing` shrinks as tokens accumulate *within* phase 1, so this can't be a read of
+  // `nextPhase()` off getState — the "Missing: …" hint stayed stale for the whole climb. It is
+  // still not a selector either, because nextPhase() builds a fresh object that
+  // useSyncExternalStore would see as a changed snapshot every render. Instead: subscribe to the
+  // values it reads, and compute from those.
+  const tokens = useTokenStore();
+  const componentCount = useComponentStore((s) => s.components.length);
+  const next = nextPhaseFrom(phase, tokens, componentCount);
   const toolCount = useWebMCPStatusStore((s) => s.toolCount);
   const source = useWebMCPStatusStore((s) => s.source);
 
