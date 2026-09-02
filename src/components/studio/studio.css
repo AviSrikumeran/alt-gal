@@ -642,3 +642,19 @@
   margin-left: auto;
   flex: none;
 }
+
+/* D-247: the detection window is its own state — a slow pulse, not a verdict colour. */
+.alt-source[data-source='detecting'] .alt-source__dot {
+  background: var(--studio-text-muted);
+  animation: alt-detecting 1.2s ease-in-out infinite;
+}
+@keyframes alt-detecting {
+  50% {
+    opacity: 0.25;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .alt-source[data-source='detecting'] .alt-source__dot {
+    animation: none;
+  }
+}

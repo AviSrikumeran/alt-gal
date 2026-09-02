@@ -175,3 +175,14 @@
   padding: 16px;
   color: var(--studio-text-muted, #8b91a1);
 }
+
+/* D-247: detection is still running; the bar says so rather than reporting 'unavailable'. */
+.alt-status__dot[data-source='detecting'] {
+  background: var(--studio-text-muted, #b0b4ba);
+  animation: alt-detecting 1.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .alt-status__dot[data-source='detecting'] {
+    animation: none;
+  }
+}

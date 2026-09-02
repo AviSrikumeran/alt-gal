@@ -8,17 +8,21 @@ import { useTokenStore } from '@/stores/tokenStore';
 import { useUIStore } from '@/stores/uiStore';
 import { useWebMCPStatusStore } from '@/stores/webmcpStatusStore';
 import type { WebMCPSource } from '@/webmcp/detect';
+import { S } from './strings';
 import './webmcp-panels.css';
 
-const sourceText = (source: WebMCPSource, n: number): string => {
-  if (source === 'native') return `${n} agent tools active · native`;
-  if (source === 'polyfill')
-    return `${n} tools registered · polyfill — no agent is connected. Open in ChatGPT's browser or enable chrome://flags/#enable-webmcp-testing.`;
-  return 'Agent tools unavailable — this page must be served over HTTPS.';
+/** D-247: 'detecting' is the ~1.5s poll window; it is not a verdict, and must not read as one. */
+type StatusSource = WebMCPSource | 'detecting';
+
+const sourceText = (source: StatusSource, n: number): string => {
+  if (source === 'detecting') return S.statusDetecting;
+  if (source === 'native') return S.statusNative(n);
+  if (source === 'polyfill') return S.statusPolyfill(n);
+  return S.statusNone;
 };
 
 export default function WebMCPStatusBar() {
-  const source = useWebMCPStatusStore((s) => s.source);
+  const source = useWebMCPStatusStore<StatusSource>((s) => (s.resolved ? s.source : 'detecting'));
   const toolCount = useWebMCPStatusStore((s) => s.toolCount);
   const degraded = useWebMCPStatusStore((s) => s.degraded);
   const failures = useWebMCPStatusStore((s) => s.failures);

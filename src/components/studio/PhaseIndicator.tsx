@@ -23,7 +23,8 @@ export default function PhaseIndicator() {
   const componentCount = useComponentStore((s) => s.components.length);
   const next = nextPhaseFrom(phase, tokens, componentCount);
   const toolCount = useWebMCPStatusStore((s) => s.toolCount);
-  const source = useWebMCPStatusStore((s) => s.source);
+  // D-247: until detection settles the source is not yet 'none' in any meaningful sense.
+  const source = useWebMCPStatusStore((s) => (s.resolved ? s.source : 'detecting'));
 
   return (
     <header className="alt-phasebar" role="banner">

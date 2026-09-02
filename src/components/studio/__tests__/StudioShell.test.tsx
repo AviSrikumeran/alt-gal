@@ -131,6 +131,16 @@ describe('StudioShell', () => {
     expect(at(0)).not.toContain('No agent can reach this page.');
   });
 
+  it('reads as "detecting", not "unavailable", until the source resolves (D-247)', () => {
+    const detecting = at(0);
+    expect(detecting).toContain('Looking for an agent browser…');
+    expect(detecting).toContain('detecting…');
+    expect(detecting).not.toContain('Agent tools unavailable');
+
+    seedResolution(true, 'insecure-context');
+    expect(at(0)).toContain('Agent tools unavailable');
+  });
+
   it('names the cause and offers a retry once the source resolves none (D-244)', () => {
     seedResolution(true, 'insecure-context');
     const html = at(0);

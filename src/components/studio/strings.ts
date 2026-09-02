@@ -9,7 +9,9 @@ export const PHASE_STEPS = ['Empty', 'Tokens', 'Components', 'Layout', 'Export']
 
 export const S = {
   toolCount: (n: number, total: number) => `${n} of ${total} tools`,
-  source: { native: 'native', polyfill: 'polyfill', none: 'unavailable' } as const,
+  // D-247: 'detecting' is not 'unavailable'. detect.ts polls ~1.5s for an extension-injected
+  // context before it falls back to the polyfill, and for that window the studio knows nothing.
+  source: { native: 'native', polyfill: 'polyfill', none: 'unavailable', detecting: 'detecting…' } as const,
 
   // token panel
   tokensTitle: 'Tokens',
@@ -100,6 +102,7 @@ export const S = {
   statusPolyfill: (n: number) =>
     `${n} tools registered · polyfill — no agent is connected. Open in ChatGPT's browser or enable chrome://flags/#enable-webmcp-testing.`,
   statusNone: 'Agent tools unavailable — this page must be served over HTTPS.',
+  statusDetecting: 'Looking for an agent browser…',
   statusCounts: (tokens: number, components: number, pages: number) =>
     `${tokens} tokens · ${components} components · ${pages} page${pages === 1 ? '' : 's'}`,
   toolInspector: 'Tool Inspector',
