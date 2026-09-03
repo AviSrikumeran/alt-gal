@@ -5,10 +5,11 @@ import { nextPhaseFrom, usePhaseStore } from '@/stores/phaseStore';
 import { useTokenStore } from '@/stores/tokenStore';
 import { useWebMCPStatusStore } from '@/stores/webmcpStatusStore';
 import { ALL_TOOL_NAMES } from '@/webmcp/toolPhaseMap';
+import Pinwheel from './Pinwheel';
 import { PHASE_STEPS, S, WORDMARK } from './strings';
 
 /**
- * D-153. Wordmark, the five-step stepper, and the live tool count read back from `getTools()`
+ * D-153, D-254. Pinwheel mark, wordmark, the five-step stepper, and the live tool count read back from `getTools()`
  * (D-016) — the count is never tracked by hand, which is the whole point: the number the human
  * sees is the browser's answer, not ours.
  */
@@ -29,7 +30,7 @@ export default function PhaseIndicator() {
   return (
     <header className="alt-phasebar" role="banner">
       <div className="alt-phasebar__brand">
-        <span className="alt-phasebar__dot" aria-hidden="true" />
+        <Pinwheel />
         <span className="alt-mono">{WORDMARK}</span>
       </div>
 

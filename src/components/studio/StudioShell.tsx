@@ -14,7 +14,7 @@ import { undoEntry } from '@/engine/undo';
 import { pushToast } from './toastStore';
 import { useShortcuts } from './useShortcuts';
 import { useStudioEvents } from './useStudioEvents';
-import { DEMO_URL, S } from './strings';
+import { S } from './strings';
 import '@/components/library/library.css';
 import './studio.css';
 
@@ -70,10 +70,13 @@ export default function StudioShell() {
     <>
       <div className="alt-small-screen">
         <p>
-          {S.smallScreen}{' '}
+          {S.smallScreen}
+          {/* D-255: the demo link is hidden until a real URL exists.
+          {' '}
           <a href={DEMO_URL} target="_blank" rel="noreferrer">
             {S.onboardingDemo}
           </a>
+          */}
         </p>
       </div>
 

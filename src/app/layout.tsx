@@ -1,19 +1,31 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Instrument_Sans, IBM_Plex_Mono } from 'next/font/google';
 import { FONT_CLASSNAMES } from '@/utils/fontLoader';
 import WebMCPBridge from '@/webmcp/WebMCPBridge';
 import './globals.css';
 
 /**
- * Studio chrome type (D-143). Geist, not Inter: Inter is where the *user's* system starts, and the
- * studio should never look like its own output.
+ * Studio chrome type (D-143 as amended by D-253). Instrument Sans and IBM Plex Mono, under chrome-only
+ * variables: the studio should never look like its own output, and the user's 13-family catalog
+ * (`src/utils/fontLoader.ts`, D-119) owns `--font-<family>` for the canvas.
  *
- * Integration note: Stream 1's `src/utils/fontLoader.ts` declares the 13 catalog families for the
- * user's tokens (D-119); its `FONT_CLASSNAMES` joins the two classes on <html> below.
+ * `display: 'optional'` by design — the chrome is a tool, not a document. A face that misses its
+ * ~100ms block window is skipped for that load rather than swapped in under the operator's cursor.
+ * Instrument Sans is variable, so it needs no `weight`; IBM Plex Mono is not, and the chrome asks
+ * for 400/500/600.
  */
-const geistSans = Geist({ variable: '--font-geist', subsets: ['latin'], display: 'swap' });
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'], display: 'swap' });
+const studioSans = Instrument_Sans({
+  subsets: ['latin'],
+  display: 'optional',
+  variable: '--font-studio-sans',
+});
+const studioMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  display: 'optional',
+  weight: ['400', '500', '600'],
+  variable: '--font-studio-mono',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://alt.gal'),
@@ -33,7 +45,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${FONT_CLASSNAMES}`}>
+    // D-249: FONT_CLASSNAMES is what puts the catalog's @font-face rules and --font-<family>
+    // variables on the page; the chrome's own two are separate and named --font-studio-*.
+    <html lang="en" className={`${studioSans.variable} ${studioMono.variable} ${FONT_CLASSNAMES}`}>
       <body>
         {children}
         {/* D-017: mounted once, as a sibling. It never wraps children. */}
