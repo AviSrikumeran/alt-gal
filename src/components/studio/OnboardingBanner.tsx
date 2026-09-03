@@ -62,15 +62,13 @@ export default function OnboardingBanner() {
       useTokenStore.getState().setMany(values);
       return { kind: 'restore_tokens', snapshot };
     });
-    pushToast({ message: 'Example tokens loaded. Generate a component to keep going.', tone: 'info' });
+    pushToast({ message: S.exampleLoaded, tone: 'info' });
   };
 
   return (
     <div className="alt-onboarding">
-      <p className="alt-onboarding__body">
-        <strong>Alternative Galaxy</strong> is a design studio for humans and AI agents. You set the tokens and the
-        rules; an agent builds inside them, using only the tools the current phase allows.
-      </p>
+      <p className="alt-onboarding__title">{S.onboardingTitle}</p>
+      <p className="alt-onboarding__body">{S.onboardingBody}</p>
       <div className="alt-onboarding__actions">
         {/* D-255: the demo link is hidden until a real URL exists.
         <a className="alt-btn" href={DEMO_URL} target="_blank" rel="noreferrer">
