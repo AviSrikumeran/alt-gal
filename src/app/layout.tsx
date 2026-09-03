@@ -1,43 +1,55 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Instrument_Sans, IBM_Plex_Mono } from 'next/font/google';
+import { Space_Grotesk, IBM_Plex_Mono, VT323 } from 'next/font/google';
 import { FONT_CLASSNAMES } from '@/utils/fontLoader';
 import WebMCPBridge from '@/webmcp/WebMCPBridge';
 import './globals.css';
 
 /**
- * Studio chrome type (D-143 as amended by D-253). Instrument Sans and IBM Plex Mono, under chrome-only
- * variables: the studio should never look like its own output, and the user's 13-family catalog
- * (`src/utils/fontLoader.ts`, D-119) owns `--font-<family>` for the canvas.
+ * Station type (ALT_GAL_REBRAND.md §D, D-260). Space Grotesk for display labels, IBM Plex Mono for
+ * the console body — log, data, everything dense — and VT323 for jumbo telemetry numerals ONLY: it
+ * is a pixel face and is illegible below the readout sizes.
  *
- * `display: 'optional'` by design — the chrome is a tool, not a document. A face that misses its
- * ~100ms block window is skipped for that load rather than swapped in under the operator's cursor.
- * Instrument Sans is variable, so it needs no `weight`; IBM Plex Mono is not, and the chrome asks
- * for 400/500/600.
+ * The `--font-station-*` names are chrome-private on purpose (the D-253 rule survives the rebrand).
+ * Space Grotesk and IBM Plex Mono are also entries in the *user's* 13-family catalog, where
+ * `fontLoader.ts` owns `--font-space-grotesk` / `--font-ibm-plex-mono` at `display: 'swap'` for the
+ * canvas. Same families, separate declarations: the console must not repaint when the human
+ * retypes their own system.
+ *
+ * `display: 'optional'` keeps a late face from swapping in under the operator's cursor.
  */
-const studioSans = Instrument_Sans({
+const stationDisplay = Space_Grotesk({
   subsets: ['latin'],
   display: 'optional',
-  variable: '--font-studio-sans',
+  weight: ['400', '500', '700'],
+  variable: '--font-station-display',
 });
-const studioMono = IBM_Plex_Mono({
+const stationMono = IBM_Plex_Mono({
   subsets: ['latin'],
   display: 'optional',
   weight: ['400', '500', '600'],
-  variable: '--font-studio-mono',
+  variable: '--font-station-mono',
 });
+const stationTele = VT323({
+  subsets: ['latin'],
+  display: 'optional',
+  weight: '400',
+  variable: '--font-station-tele',
+});
+
+const STATION_FONTS = [stationDisplay.variable, stationMono.variable, stationTele.variable].join(' ');
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://alt.gal'),
-  title: 'Alternative Galaxy — Design systems for humans and agents',
+  title: 'alt.gal — a ground station for design systems',
   description:
-    "A design studio where the AI agent's tools are a function of the work's state. Set tokens, write rules, and let any WebMCP agent build inside them.",
+    'A ground station for building design systems. You set the tokens and the flight rules; GAL — any WebMCP agent — builds inside them, running only the systems your clearance allows.',
   openGraph: {
-    title: 'Alternative Galaxy — Design systems for humans and agents',
+    title: 'alt.gal — a ground station for design systems',
     description:
-      "A design studio where the AI agent's tools are a function of the work's state. Set tokens, write rules, and let any WebMCP agent build inside them.",
+      'A ground station for building design systems. You set the tokens and the flight rules; GAL — any WebMCP agent — builds inside them, running only the systems your clearance allows.',
     url: 'https://alt.gal',
-    siteName: 'Alternative Galaxy',
+    siteName: 'alt.gal',
     type: 'website',
   },
   twitter: { card: 'summary_large_image' },
@@ -46,8 +58,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // D-249: FONT_CLASSNAMES is what puts the catalog's @font-face rules and --font-<family>
-    // variables on the page; the chrome's own two are separate and named --font-studio-*.
-    <html lang="en" className={`${studioSans.variable} ${studioMono.variable} ${FONT_CLASSNAMES}`}>
+    // variables on the page; the console's own three are separate, named --font-station-* (D-260).
+    <html lang="en" className={`${STATION_FONTS} ${FONT_CLASSNAMES}`}>
       <body>
         {children}
         {/* D-017: mounted once, as a sibling. It never wraps children. */}

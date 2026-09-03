@@ -9,11 +9,13 @@
   gap: 16px;
   height: 28px;
   padding: 0 12px;
-  background: var(--studio-panel, #18191b);
-  border-top: 1px solid var(--studio-border, #363a3f);
-  color: var(--studio-text-muted, #b0b4ba);
-  font-family: var(--studio-font, system-ui), system-ui, sans-serif;
-  font-size: 11px;
+  background: var(--studio-panel, #f3f1ea);
+  border-top: 1px solid var(--studio-border, #c7c2b2);
+  color: var(--studio-text-muted, #5f5a49);
+  font-family: var(--font-mono, ui-monospace), system-ui, sans-serif;
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -29,45 +31,45 @@
 }
 .alt-status__dot {
   flex: none;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--studio-text-faint, #696e77);
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--studio-text-faint, #5f5a49);
 }
 .alt-status__dot[data-source='native'] {
-  background: var(--studio-ok, #3ddc97);
+  background: var(--studio-ok, #3e6b34);
 }
 .alt-status__dot[data-source='polyfill'] {
-  background: var(--studio-warn, #ffb547);
+  background: var(--studio-warn, #973a12);
 }
 .alt-status__dot[data-source='none'] {
-  background: var(--studio-err, #ff5c7a);
+  background: var(--studio-err, #a32a1e);
 }
 .alt-status__counts {
   margin-left: auto;
-  font-family: var(--studio-font-mono, ui-monospace), ui-monospace, monospace;
+  font-family: var(--font-mono, ui-monospace), ui-monospace, monospace;
 }
 .alt-status__degraded {
-  color: var(--studio-err, #ff5c7a);
+  color: var(--studio-err, #a32a1e);
 }
 .alt-status__toggle,
 .alt-inspector button {
   height: 22px;
   padding: 0 10px;
-  border: 1px solid var(--studio-border, #363a3f);
+  border: 1px solid var(--studio-border, #c7c2b2);
   border-radius: var(--studio-radius, 8px);
-  background: var(--studio-surface, #272a2d);
-  color: var(--studio-text, #edeef0);
+  background: var(--studio-surface, #f3f1ea);
+  color: var(--studio-text, #17150f);
   font: inherit;
   cursor: pointer;
 }
 .alt-status__toggle[aria-pressed='true'] {
-  border-color: var(--studio-accent, #ff3d9e);
-  color: var(--studio-accent, #ff3d9e);
+  border-color: var(--studio-accent, #c4501b);
+  color: var(--studio-accent, #c4501b);
 }
 .alt-status__toggle:focus-visible,
 .alt-inspector :focus-visible {
-  outline: 2px solid var(--studio-accent, #ff3d9e);
+  outline: 2px solid var(--ink, #17150f);
   outline-offset: 2px;
 }
 
@@ -76,10 +78,10 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: var(--studio-panel, #18191b);
-  border-left: 1px solid var(--studio-border, #363a3f);
-  color: var(--studio-text, #edeef0);
-  font-family: var(--studio-font, system-ui), system-ui, sans-serif;
+  background: var(--studio-panel, #f3f1ea);
+  border-left: 1px solid var(--studio-border, #c7c2b2);
+  color: var(--studio-text, #17150f);
+  font-family: var(--font-mono, ui-monospace), system-ui, sans-serif;
   font-size: 12px;
 }
 .alt-inspector__head {
@@ -88,7 +90,7 @@
   justify-content: space-between;
   gap: 8px;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--studio-border, #363a3f);
+  border-bottom: 1px solid var(--studio-border, #c7c2b2);
 }
 .alt-inspector__head h2 {
   margin: 0;
@@ -103,12 +105,12 @@
 }
 .alt-inspector__list {
   overflow-y: auto;
-  border-right: 1px solid var(--studio-border, #363a3f);
+  border-right: 1px solid var(--studio-border, #c7c2b2);
   padding: 8px;
 }
 .alt-inspector__label {
   padding: 4px 8px 8px;
-  color: var(--studio-text-muted, #b0b4ba);
+  color: var(--studio-text-muted, #5f5a49);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -121,15 +123,15 @@
   border: 1px solid transparent;
   border-radius: var(--studio-radius, 8px);
   background: none;
-  color: var(--studio-text, #edeef0);
-  font-family: var(--studio-font-mono, ui-monospace), ui-monospace, monospace;
+  color: var(--studio-text, #17150f);
+  font-family: var(--font-mono, ui-monospace), ui-monospace, monospace;
   font-size: 11px;
   text-align: left;
   cursor: pointer;
 }
 .alt-inspector__tool[aria-current='true'] {
-  background: var(--studio-accent-soft, rgba(255, 61, 158, 0.16));
-  border-color: var(--studio-accent, #ff3d9e);
+  background: var(--studio-accent-soft, rgba(196, 80, 27, 0.12));
+  border-color: var(--studio-accent, #c4501b);
 }
 .alt-inspector__detail {
   overflow-y: auto;
@@ -140,24 +142,24 @@
 }
 .alt-inspector__detail h3 {
   margin: 0;
-  font-family: var(--studio-font-mono, ui-monospace), ui-monospace, monospace;
+  font-family: var(--font-mono, ui-monospace), ui-monospace, monospace;
   font-size: 12px;
   font-weight: 600;
 }
 .alt-inspector__desc {
   margin: 0;
-  color: var(--studio-text-muted, #b0b4ba);
+  color: var(--studio-text-muted, #5f5a49);
   line-height: 1.5;
 }
 .alt-inspector textarea,
 .alt-inspector pre {
   margin: 0;
   padding: 8px;
-  border: 1px solid var(--studio-border, #363a3f);
+  border: 1px solid var(--studio-border, #c7c2b2);
   border-radius: var(--studio-radius, 8px);
-  background: var(--studio-surface, #272a2d);
-  color: var(--studio-text, #edeef0);
-  font-family: var(--studio-font-mono, ui-monospace), ui-monospace, monospace;
+  background: var(--studio-surface, #f3f1ea);
+  color: var(--studio-text, #17150f);
+  font-family: var(--font-mono, ui-monospace), ui-monospace, monospace;
   font-size: 11px;
   line-height: 1.5;
   white-space: pre-wrap;
@@ -166,19 +168,19 @@
 }
 .alt-inspector__run {
   align-self: flex-start;
-  border-color: var(--studio-accent, #ff3d9e) !important;
-  background: var(--studio-accent, #ff3d9e) !important;
-  color: var(--studio-on-accent, #111113) !important;
+  border-color: var(--studio-accent, #c4501b) !important;
+  background: var(--studio-accent, #c4501b) !important;
+  color: var(--studio-on-accent, #f3f1ea) !important;
   font-weight: 600;
 }
 .alt-inspector__empty {
   padding: 16px;
-  color: var(--studio-text-muted, #b0b4ba);
+  color: var(--studio-text-muted, #5f5a49);
 }
 
 /* D-247: detection is still running; the bar says so rather than reporting 'unavailable'. */
 .alt-status__dot[data-source='detecting'] {
-  background: var(--studio-text-muted, #b0b4ba);
+  background: var(--studio-text-muted, #5f5a49);
   animation: alt-detecting 1.2s ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {

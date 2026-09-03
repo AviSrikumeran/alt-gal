@@ -9,15 +9,18 @@ import { S } from './strings';
 
 type Filter = 'all' | 'agent' | 'human';
 
-const TIME = new Intl.DateTimeFormat(undefined, {
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hour12: false,
-});
+/**
+ * D-038: timestamps are stored as Unix ms and formatted only here. §E asks for mission-elapsed
+ * time rather than wall clock, so the loop reads `T+00:14:22` — elapsed from the first entry
+ * burned to the recorder. `epoch` is derived from the entries themselves, never stored, so this
+ * stays a formatting change and the log's shape is untouched (§I flag a).
+ */
+const pad = (n: number): string => String(Math.floor(n)).padStart(2, '0');
 
-/** D-038: timestamps are stored as Unix ms and formatted only here. */
-const at = (ms: number): string => TIME.format(new Date(ms));
+export const missionElapsed = (ms: number, epoch: number): string => {
+  const s = Math.max(0, Math.round((ms - epoch) / 1000));
+  return `T+${pad(s / 3600)}:${pad((s % 3600) / 60)}:${pad(s % 60)}`;
+};
 
 const truncate = (s: string, n = 40): string => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 
@@ -51,10 +54,12 @@ function resultLine(entry: AgentLogEntry): string {
   return entry.result.ok ? entry.result.summary : entry.result.error;
 }
 
-function Row({ entry }: { entry: AgentLogEntry }) {
+function Row({ entry, epoch }: { entry: AgentLogEntry; epoch: number }) {
   const [open, setOpen] = useState(false);
   const failed = entry.status === 'error';
   const tone = entry.undone ? 'undone' : failed ? 'error' : entry.actor;
+  // §E: authorship is legible from callsign + colour + rail, with no avatar art.
+  const callsign = entry.actor === 'agent' ? S.callsignAgent : S.callsignHuman;
 
   const onUndo = () => {
     const result = undoEntry(entry.id);
@@ -65,7 +70,9 @@ function Row({ entry }: { entry: AgentLogEntry }) {
   return (
     <li className="alt-log__entry" data-tone={tone} data-source={entry.source} data-undone={entry.undone || undefined}>
       <div className="alt-log__head">
-        <span className="alt-log__dot" aria-hidden="true" />
+        <span className="alt-log__callsign" aria-hidden="true">
+          {callsign} ▸
+        </span>
         <button
           type="button"
           className="alt-log__tool alt-mono"
@@ -76,7 +83,7 @@ function Row({ entry }: { entry: AgentLogEntry }) {
         </button>
         {entry.undone && <span className="alt-log__tag">{S.undoneTag}</span>}
         <time className="alt-log__time" dateTime={new Date(entry.timestamp).toISOString()}>
-          {at(entry.timestamp)}
+          {missionElapsed(entry.timestamp, epoch)}
         </time>
       </div>
 
@@ -119,6 +126,9 @@ export default function AgentLog() {
   }, [entries.length]);
 
   const shown = [...entries].reverse().filter((e) => filter === 'all' || e.actor === filter);
+  // The loop's T-zero: the first entry burned to the recorder. The 0 fallback is never read —
+  // with no entries there is no row to stamp — and `Date.now()` here would be impure in render.
+  const epoch = entries[0]?.timestamp ?? 0;
 
   const toTop = () => {
     listRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
@@ -186,7 +196,7 @@ export default function AgentLog() {
         onScroll={() => listRef.current?.scrollTop === 0 && setUnseen(0)}
       >
         {shown.map((entry) => (
-          <Row key={entry.id} entry={entry} />
+          <Row key={entry.id} entry={entry} epoch={epoch} />
         ))}
       </ol>
 

@@ -1,49 +1,94 @@
-/* globals.css — the studio's own palette and primitives (D-142, D-143, D-144, D-251, D-252, D-253).
-   Nothing here uses a user token: the chrome is dark, always, and never inherits the user's theme. */
+/* globals.css — the station console (ALT_GAL_REBRAND.md §D, D-257..D-260).
+   Studio chrome only. Nothing here reads a user token: the console is a warm paper-and-ink
+   document so it can never colour-cast or outshine whatever the human puts in the viewport. */
 
 :root {
-  /* Radix Colors 3.0 — slateDark, verbatim (D-251). The chrome's only neutral ramp: every
-     --studio-* grey below is an alias onto a step, so a shade is never invented at a call site. */
-  --studio-1: #111113;
-  --studio-2: #18191b;
-  --studio-3: #212225;
-  --studio-4: #272a2d;
-  --studio-5: #2e3135;
-  --studio-6: #363a3f;
-  --studio-7: #43484e;
-  --studio-8: #5a6169;
-  --studio-9: #696e77;
-  --studio-10: #777b84;
-  --studio-11: #b0b4ba;
-  --studio-12: #edeef0;
+  /* ---- COLOUR: light "console document" (§D) ------------------------------ */
+  --paper: #e9e6dd; /* app background — warm console cream */
+  --paper-2: #f3f1ea; /* raised card / panel surface */
+  --paper-sunk: #dedacf; /* recessed well (viewport mat, inputs) */
+  --ink: #17150f; /* primary text — 14.6:1 on --paper */
+  --ink-muted: #5f5a49; /* secondary text — 5.5:1 on --paper */
+  --rule: #c7c2b2; /* hairline borders / ruled lines */
+  --rule-strong: #a9a390; /* emphasised dividers — decorative only, 2.0:1 */
+  --rule-ctrl: #7e7865; /* D-258: interactive borders — 3.5:1 on paper, 3.2:1 on the sunk well */
+  --signal: #c4501b; /* amber — LIVE/active fills and strokes, 3.7:1 (UI, never small text) */
+  --signal-ink: #973a12; /* amber TEXT — 5.7:1 on --paper */
+  --go: #3e6b34; /* clearance granted / success — 5.0:1 */
+  --abort: #a32a1e; /* abort / error — 5.8:1 */
+  --glow: #e7b27a; /* one-pixel carrier glow only, never a fill */
 
-  /* Semantic aliases. Radix's step meanings, in the order the studio stacks its surfaces:
-     app < panels < canvas < inset surfaces, then separator / border / solid / text. */
-  --studio-bg: var(--studio-1); /* app background, phase bar */
-  --studio-panel: var(--studio-2); /* token panel, agent log */
-  --studio-canvas: var(--studio-3); /* the centre stage behind specimens */
-  --studio-surface: var(--studio-4); /* specimen chrome, popovers, inputs */
-  --studio-canvas-dot: var(--studio-6);
-  --studio-border: var(--studio-6); /* separators */
-  --studio-border-strong: var(--studio-7); /* interactive element borders */
-  --studio-text: var(--studio-12);
-  --studio-text-muted: var(--studio-11);
-  --studio-text-faint: var(--studio-9);
+  /* ---- TYPE (§D) ---------------------------------------------------------- */
+  --font-display: var(--font-station-display), system-ui, sans-serif; /* Space Grotesk */
+  --font-mono: var(--font-station-mono), ui-monospace, monospace; /* IBM Plex Mono */
+  --font-tele: var(--font-station-tele), monospace; /* VT323 — jumbo numerals ONLY */
+  --fs-tele: 64px;
+  --fs-h1: 22px;
+  --fs-h2: 16px;
+  --fs-label: 11px;
+  --fs-body: 13px;
+  --fs-log: 12.5px;
+  --fs-micro: 10.5px;
+  --wt-reg: 400;
+  --wt-med: 500;
+  --wt-bold: 700;
+  --track-label: 0.12em;
+  --track-tight: -0.02em;
 
-  --studio-accent: #ff3d9e; /* alt.gal pink (D-252): focus, selection, active phase, primary buttons */
-  --studio-accent-soft: rgba(255, 61, 158, 0.16);
-  --studio-on-accent: var(--studio-1); /* 5.8:1 on the accent; white is only 3.3:1 */
-  --studio-agent: #7ce0ff; /* agent-authored entries and the agent dot — a hue, not a second accent */
-  --studio-agent-soft: rgba(124, 224, 255, 0.1);
-  --studio-ok: #3ddc97;
-  --studio-warn: #ffb547;
-  --studio-err: #ff5c7a;
-  --studio-font: var(--font-studio-sans);
-  --studio-font-mono: var(--font-studio-mono);
-  --studio-radius: 8px;
-  --studio-radius-lg: 12px;
+  /* ---- RADIUS / SPACING / BORDER (§D) ------------------------------------- */
+  --r-0: 0px;
+  --r-1: 2px;
+  --r-2: 4px;
+  --r-pill: 999px;
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --border: 1px solid var(--rule);
+  --border-strong: 1.5px solid var(--rule-strong);
+  --grid-8: 8px;
 
-  color-scheme: dark;
+  /* ---- MOTION (§D; every value sourced in the work order) ------------------ */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1); /* Material "decelerate" */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* Material "standard" */
+  --ease-strong: cubic-bezier(0.23, 1, 0.32, 1); /* Emil Kowalski's stronger ease-out */
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1); /* Vaul / Ionic iOS sheet */
+  --dur-micro: 120ms;
+  --dur-snap: 180ms;
+  --dur-ui: 300ms;
+  --dur-sheet: 500ms;
+  --press: 0.97;
+
+  /* ---- --studio-* aliases (D-259) ----------------------------------------
+     Every chrome stylesheet on main is written against these names. Repointing them here
+     repaints the whole console from one block, which is what §I calls a "pure CSS swap, no DOM
+     changes". They are aliases now, not a palette: the palette is above. */
+  --studio-bg: var(--paper);
+  --studio-panel: var(--paper-2);
+  --studio-canvas: var(--paper-sunk);
+  --studio-surface: var(--paper-2);
+  --studio-canvas-dot: var(--rule);
+  --studio-border: var(--rule);
+  --studio-border-strong: var(--rule-ctrl);
+  --studio-text: var(--ink);
+  --studio-text-muted: var(--ink-muted);
+  --studio-text-faint: var(--ink-muted); /* no "faint" tier on paper: it would fail AA */
+  --studio-accent: var(--signal);
+  --studio-accent-soft: rgba(196, 80, 27, 0.12);
+  --studio-on-accent: var(--paper-2);
+  --studio-agent: var(--signal-ink); /* GAL's voice; the agent hue IS the signal now */
+  --studio-agent-soft: rgba(196, 80, 27, 0.08);
+  --studio-ok: var(--go);
+  --studio-warn: var(--signal-ink);
+  --studio-err: var(--abort);
+  --studio-font: var(--font-station-display);
+  --studio-font-mono: var(--font-station-mono);
+  --studio-radius: var(--r-2);
+  --studio-radius-lg: var(--r-2);
+
+  color-scheme: light;
 }
 
 *,
@@ -60,11 +105,11 @@ body {
 }
 
 body {
-  background: var(--studio-bg);
-  color: var(--studio-text);
-  font-family: var(--studio-font), system-ui, sans-serif;
-  font-size: 13px;
-  line-height: 1.45;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
@@ -99,8 +144,10 @@ textarea {
   color: inherit;
 }
 
+/* §I flag (c): focus and selection are INK outlines, never colour fills, so they survive both
+   the cream mat and any colour the human puts on the canvas. */
 :focus-visible {
-  outline: 2px solid var(--studio-accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
@@ -123,84 +170,130 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 12px;
-  border-radius: var(--studio-radius);
-  border: 1px solid var(--studio-border-strong);
-  background: var(--studio-surface);
-  color: var(--studio-text);
-  font-size: 12px;
-  font-weight: 500;
+  gap: var(--sp-1);
+  height: 30px;
+  padding: 0 var(--sp-3);
+  border-radius: var(--r-1);
+  border: 1px solid var(--rule-ctrl);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--wt-med);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   cursor: pointer;
   white-space: nowrap;
   transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    color 120ms ease;
+    background-color var(--dur-micro) var(--ease-standard),
+    border-color var(--dur-micro) var(--ease-standard),
+    color var(--dur-micro) var(--ease-standard),
+    transform var(--dur-micro) var(--ease-standard);
 }
 .alt-btn:hover:not(:disabled) {
-  border-color: var(--studio-text-faint);
+  background: var(--paper-sunk);
+  border-color: var(--ink-muted);
+}
+/* §H: Emil's press value. */
+.alt-btn:active:not(:disabled) {
+  transform: scale(var(--press));
 }
 .alt-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
+/* Primary fills INK, not the signal: cream-on-ink is 14.6:1, cream-on-amber only 3.7:1. */
 .alt-btn[data-kind='primary'] {
-  background: var(--studio-accent);
-  border-color: var(--studio-accent);
-  color: var(--studio-on-accent);
-  font-weight: 600;
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper-2);
+  font-weight: var(--wt-bold);
 }
 .alt-btn[data-kind='primary']:hover:not(:disabled) {
-  filter: brightness(1.08);
+  background: var(--signal-ink);
+  border-color: var(--signal-ink);
 }
 .alt-btn[data-kind='ghost'] {
   background: transparent;
   border-color: transparent;
-  color: var(--studio-text-muted);
+  color: var(--ink-muted);
 }
 .alt-btn[data-kind='ghost']:hover:not(:disabled) {
-  color: var(--studio-text);
-  background: var(--studio-surface);
+  color: var(--ink);
+  background: var(--paper-sunk);
 }
 .alt-btn[data-active='true'] {
-  background: var(--studio-accent-soft);
-  border-color: var(--studio-accent);
-  color: var(--studio-accent);
+  background: var(--paper-sunk);
+  border-color: var(--signal);
+  color: var(--signal-ink);
 }
 .alt-btn[data-icon='true'] {
-  width: 32px;
+  width: 30px;
   padding: 0;
 }
 
 .alt-field {
   height: 30px;
-  padding: 0 8px;
-  border-radius: 6px;
-  border: 1px solid var(--studio-border-strong);
-  background: var(--studio-surface);
-  color: var(--studio-text);
-  font-size: 12px;
+  padding: 0 var(--sp-2);
+  border-radius: var(--r-1);
+  border: 1px solid var(--rule-ctrl);
+  background: var(--paper-sunk);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-body);
+}
+.alt-field:focus {
+  outline: none;
+  border-color: var(--ink);
 }
 
 .alt-label {
   display: block;
-  font-size: 11px;
-  color: var(--studio-text-muted);
-  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: var(--sp-1);
 }
 
 .alt-sectionhead {
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--studio-text-muted);
-  margin: 12px 0 8px;
+  letter-spacing: var(--track-label);
+  color: var(--ink-muted);
+  margin: var(--sp-3) 0 var(--sp-2);
+}
+/* §E: section headers carry a leading register tick. */
+.alt-sectionhead::before {
+  content: '▸ ';
+  color: var(--signal);
 }
 
 .alt-mono {
-  font-family: var(--studio-font-mono), ui-monospace, monospace;
+  font-family: var(--font-mono);
+}
+
+/* Uppercase register label, the console's most common text object (§E). */
+.alt-reg {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: var(--wt-med);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* §H: the console chrome never animates position, and nothing decorative loops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Below 1024px the studio is not offered at all (D-155). */

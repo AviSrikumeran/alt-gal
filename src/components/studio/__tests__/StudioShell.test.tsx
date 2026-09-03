@@ -67,43 +67,43 @@ describe('StudioShell', () => {
     const html = at(0);
     expect(html).toContain('alt-studio');
     expect(html).toContain('alt.gal');
-    expect(html).toContain('4 of 24 tools');
+    expect(html).toContain('04 OF 24 SYSTEMS ONLINE');
     expect(html).toContain('aria-label="Tokens"');
     expect(html).toContain('aria-label="Canvas"');
     expect(html).toContain('aria-label="Log"');
-    expect(html).toContain('No activity yet.');
+    expect(html).toContain('COMMS LOOP OPEN · NO TRAFFIC YET');
   });
 
   it('shows the phase 0 empty state (D-149)', () => {
     const html = at(0);
-    expect(html).toContain('Nothing to render yet');
-    expect(html).toContain('Set primary color');
-    expect(html).toContain('Open Tool Inspector');
+    expect(html).toContain('VIEWPORT DARK');
+    expect(html).toContain('SET PRIMARY COLOUR');
+    expect(html).toContain('OPEN INSTRUMENT SPEC');
   });
 
   it('shows the phase 1 empty state with the remaining count', () => {
     const html = at(1);
-    expect(html).toContain('more tokens to unlock components.');
+    expect(html).toContain('more tokens to clear the next level.');
     expect(html).toContain('Fill from primary');
   });
 
   it('shows the phase 2 empty state and the + Component path (D-150)', () => {
     const html = at(2);
-    expect(html).toContain('Your tokens are ready.');
-    expect(html).toContain('Generate a component from the + button, or ask your agent for one.');
-    expect(html).toContain('+ Component');
+    expect(html).toContain('RACK NOMINAL');
+    expect(html).toContain('Log an instrument from the + switch, or ask GAL for one.');
+    expect(html).toContain('+ INSTRUMENT');
   });
 
   it('shows the phase 3 wireframe banner and the New wireframe button', () => {
     const html = at(3);
     expect(html).toContain('Sketch a wireframe to compose a page.');
-    expect(html).toContain('+ New wireframe');
+    expect(html).toContain('+ NEW WIREFRAME');
   });
 
   it('offers Export only in phase 4', () => {
     // the stepper always names the Export phase; this is the toolbar button (D-148)
-    expect(at(3)).not.toContain('data-kind="primary">Export<');
-    expect(at(4)).toContain('data-kind="primary">Export<');
+    expect(at(3)).not.toContain('data-kind="primary">CLEAR FOR LAUNCH<');
+    expect(at(4)).toContain('data-kind="primary">CLEAR FOR LAUNCH<');
   });
 
   it('marks the current phase step with aria-current (D-206)', () => {
@@ -118,35 +118,35 @@ describe('StudioShell', () => {
   });
 
   it('shows the small-screen notice for viewports under 1024px (D-155)', () => {
-    expect(at(0)).toContain('Alternative Galaxy is a desktop studio.');
+    expect(at(0)).toContain('alt.gal is a desktop station.');
   });
 
   it('shows the suggested prompts only when WebMCP is native (D-159)', () => {
-    expect(at(0)).toContain('Open this page in an agent browser to collaborate.');
+    expect(at(0)).toContain('Open this page in an agent browser and GAL comes on the loop.');
     seedSource('native');
     expect(at(0)).toContain('What can you do on this page?');
   });
 
   it('stays quiet about the agent surface while detection is still running (D-244)', () => {
-    expect(at(0)).not.toContain('No agent can reach this page.');
+    expect(at(0)).not.toContain('GAL OFF-LINE · NO CARRIER. You have the console, Director.');
   });
 
   it('reads as "detecting", not "unavailable", until the source resolves (D-247)', () => {
     const detecting = at(0);
-    expect(detecting).toContain('Looking for an agent browser…');
-    expect(detecting).toContain('detecting…');
-    expect(detecting).not.toContain('Agent tools unavailable');
+    // §G 25: one loading string covers both the status sentence and the source chip.
+    expect(detecting).toContain('ACQUIRING SIGNAL…');
+    expect(detecting).not.toContain('NO CARRIER — the station must be served over HTTPS');
 
     seedResolution(true, 'insecure-context');
-    expect(at(0)).toContain('Agent tools unavailable');
+    expect(at(0)).toContain('NO CARRIER — the station must be served over HTTPS');
   });
 
   it('names the cause and offers a retry once the source resolves none (D-244)', () => {
     seedResolution(true, 'insecure-context');
     const html = at(0);
-    expect(html).toContain('No agent can reach this page.');
+    expect(html).toContain('GAL OFF-LINE · NO CARRIER. You have the console, Director.');
     expect(html).toContain('not a secure context');
-    expect(html).toContain('Retry detection');
+    expect(html).toContain('RE-ACQUIRE');
   });
 
   it('falls back to the unknown cause when none was recorded (D-244)', () => {
@@ -156,8 +156,8 @@ describe('StudioShell', () => {
 
   it('renders the onboarding banner until it is dismissed (D-156)', () => {
     seedOnboarding(false);
-    expect(at(0)).toContain('Load example tokens');
+    expect(at(0)).toContain('LOAD EXAMPLE TOKENS');
     seedOnboarding(true);
-    expect(at(0)).not.toContain('Load example tokens');
+    expect(at(0)).not.toContain('LOAD EXAMPLE TOKENS');
   });
 });

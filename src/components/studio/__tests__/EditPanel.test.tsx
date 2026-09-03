@@ -49,7 +49,7 @@ describe('EditPanel', () => {
     useUIStore.getState().select(spec.id);
     render(<EditPanel />);
 
-    fireEvent.click(screen.getByRole('tab', { name: 'Why it looks like this' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'WHY IT LOOKS LIKE THIS' }));
     expect(screen.getByText('--color-primary')).toBeTruthy();
     expect(screen.getByText('root.background-color')).toBeTruthy();
     expect(screen.getByText('hsl(250, 84.0%, 60.0%)')).toBeTruthy();
@@ -72,6 +72,6 @@ describe('EditPanel', () => {
     const spec = button();
     useUIStore.getState().select(spec.id);
     render(<EditPanel />);
-    expect(screen.getByRole('button', { name: 'Copy code' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'COPY CODE' })).toBeTruthy();
   });
 });
