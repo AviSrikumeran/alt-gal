@@ -120,6 +120,18 @@ export const S = {
   unavailableRetry: 'Retry detection',
   unavailableRetrying: 'Detecting…',
 
+  // component edit panel (D-189)
+  editTitle: 'Component',
+  editTabs: { edit: 'Edit', why: 'Why it looks like this' } as const,
+  editCopyCode: 'Copy code',
+  editCopied: 'Copied',
+  editCopyFailed: 'Clipboard blocked',
+  editClose: 'Close',
+  editUnset: 'unset',
+  editPageOwned: 'Owned by the rendered page. Re-rendering replaces it.',
+  editWhyIntro: (n: number) => `${n} styled propert${n === 1 ? 'y' : 'ies'}, each one a token reference.`,
+  editWhyEmpty: 'This component references no tokens.',
+
   // export panel (D-174)
   exportTitle: 'Export',
   exportTabs: { tokens: 'Tokens', components: 'Components', page: 'Page', everything: 'Everything' } as const,

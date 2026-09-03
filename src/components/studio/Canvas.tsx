@@ -6,6 +6,7 @@ import { usePhaseStore } from '@/stores/phaseStore';
 import { useUIStore, VIEWPORT_WIDTHS } from '@/stores/uiStore';
 import { commitHuman } from '@/engine/commit';
 import ComponentForm from './ComponentForm';
+import EditPanel from './EditPanel';
 import EmptyState from './EmptyState';
 import ErrorBoundary from './ErrorBoundary';
 import OnboardingBanner from './OnboardingBanner';
@@ -180,6 +181,11 @@ export default function Canvas() {
           </div>
         )}
       </div>
+
+      {/* D-189: the selection's edit panel, docked under the canvas while something is selected. */}
+      <ErrorBoundary>
+        <EditPanel />
+      </ErrorBoundary>
     </main>
   );
 }

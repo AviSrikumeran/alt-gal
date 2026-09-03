@@ -658,3 +658,78 @@
     animation: none;
   }
 }
+
+/* ---- component edit panel (D-189) ---------------------------------------- */
+
+.alt-edit {
+  flex: none;
+  max-height: 40%;
+  overflow: auto;
+  border-top: 1px solid var(--studio-border);
+  background: var(--studio-panel);
+}
+.alt-edit__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--studio-border);
+  position: sticky;
+  top: 0;
+  background: var(--studio-panel);
+}
+.alt-edit__type {
+  font-size: 12px;
+  color: var(--studio-text);
+}
+.alt-edit__id {
+  font-size: 11px;
+  color: var(--studio-text-faint);
+}
+.alt-edit__tabs {
+  display: flex;
+  gap: 6px;
+  margin-left: 8px;
+}
+.alt-edit__head .alt-btn:nth-last-child(2) {
+  margin-left: auto;
+}
+.alt-edit__body {
+  padding: 12px;
+}
+.alt-edit__fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+.alt-edit__note {
+  font-size: 11px;
+  color: var(--studio-text-muted);
+  margin-bottom: 8px;
+}
+.alt-edit__fields .alt-edit__note {
+  margin: 0 0 4px auto;
+}
+.alt-edit__map {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.alt-edit__map th,
+.alt-edit__map td {
+  text-align: left;
+  font-weight: 400;
+  padding: 3px 8px 3px 0;
+  border-bottom: 1px solid var(--studio-border);
+  white-space: nowrap;
+}
+.alt-edit__map th {
+  color: var(--studio-text-muted);
+}
+.alt-edit__map td {
+  color: var(--studio-text);
+}
+.alt-edit__map td[data-unset] {
+  color: var(--studio-text-faint);
+  font-style: italic;
+}
