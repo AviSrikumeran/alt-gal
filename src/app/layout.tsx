@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { FONT_CLASSNAMES } from '@/utils/fontLoader';
 import WebMCPBridge from '@/webmcp/WebMCPBridge';
 import './globals.css';
 
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${FONT_CLASSNAMES}`}>
       <body>
         {children}
         {/* D-017: mounted once, as a sibling. It never wraps children. */}
