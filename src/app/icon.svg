@@ -1,10 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <rect width="48" height="48" rx="6" fill="#E9E6DD" />
-  <g fill="none" stroke="#17150F">
-    <circle cx="24" cy="24" r="18.5" stroke-width="2.5" />
-    <ellipse cx="24" cy="24" rx="18.5" ry="7" stroke-width="2" transform="rotate(-24 24 24)" />
-    <path d="M24 4.5v4 M43.5 24h-4 M24 43.5v-4 M4.5 24h4" stroke-width="2.5" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="7" fill="#111113" />
+  <g fill="#FF3D9E">
+    <path d="M16 16 L16 3 A6.5 6.5 0 0 1 16 16 Z" />
+    <path d="M16 16 L16 3 A6.5 6.5 0 0 1 16 16 Z" transform="rotate(90 16 16)" />
+    <path d="M16 16 L16 3 A6.5 6.5 0 0 1 16 16 Z" transform="rotate(180 16 16)" />
+    <path d="M16 16 L16 3 A6.5 6.5 0 0 1 16 16 Z" transform="rotate(270 16 16)" />
   </g>
-  <circle cx="24" cy="24" r="5" fill="#C4501B" />
-  <circle cx="38" cy="17.5" r="2.4" fill="#17150F" />
 </svg>

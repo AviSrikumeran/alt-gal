@@ -9,10 +9,10 @@
   transition: outline-color 120ms ease;
 }
 .alt-specimen[data-selected] {
-  outline-color: var(--ink);
+  outline-color: var(--studio-accent);
 }
 .alt-specimen:focus-visible {
-  outline-color: var(--ink);
+  outline-color: var(--studio-accent);
 }
 .alt-specimen__head {
   display: flex;
@@ -49,18 +49,17 @@
 
 /* ==========================================================================
    Stream 4 — wireframes, rendered pages, and the render transition.
-   Studio chrome only: wireframes are never token-styled (D-128). The five greys below are the
-   one place those literals live; D-259 repoints them off the retired slate ramp onto the
-   console's paper/rule tones so an unrendered wireframe reads as a blueprint on the mat.
+   Studio chrome only: wireframes are never token-styled (D-128), so the four
+   grays below are the one place those literals live.
    ========================================================================== */
 
 .alt-wf,
 .alt-page {
-  --wf-fill: var(--paper-2);
-  --wf-border: var(--rule-ctrl);
-  --wf-inner: var(--paper-sunk);
-  --wf-label: var(--ink-muted);
-  --wf-placeholder: var(--rule-strong);
+  --wf-fill: var(--studio-5);
+  --wf-border: var(--studio-8);
+  --wf-inner: var(--studio-6);
+  --wf-label: var(--studio-11);
+  --wf-placeholder: var(--studio-10);
 }
 .alt-wf {
   display: flex;
@@ -81,7 +80,7 @@
   outline-offset: 2px;
 }
 .alt-wf__box:focus-visible {
-  outline-color: var(--ink);
+  outline-color: var(--studio-accent);
 }
 .alt-wf__label {
   position: absolute;
@@ -146,7 +145,7 @@
   cursor: not-allowed;
 }
 .alt-wf__ctrl:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--studio-accent);
   outline-offset: 2px;
 }
 
@@ -179,7 +178,7 @@
   border-color: var(--studio-accent);
 }
 .alt-wf__addbtn:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--studio-accent);
   outline-offset: 2px;
 }
 .alt-wf__menu {
@@ -193,7 +192,7 @@
   background: var(--studio-surface);
   border: 1px solid var(--studio-border-strong);
   border-radius: var(--studio-radius, 8px);
-  border: var(--border-strong);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 45%);
 }
 .alt-wf__menuitem {
   padding: 6px 10px;
@@ -211,7 +210,7 @@
   background: var(--studio-accent-soft);
 }
 .alt-wf__menuitem:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--studio-accent);
   outline-offset: -2px;
 }
 
@@ -237,7 +236,7 @@
 }
 .alt-page__component[data-selected],
 .alt-page__component:focus-visible {
-  outline-color: var(--ink);
+  outline-color: var(--studio-accent);
 }
 .alt-page__chip {
   position: absolute;

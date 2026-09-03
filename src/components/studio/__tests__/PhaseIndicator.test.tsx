@@ -10,9 +10,7 @@ import { useLayoutStore } from '@/stores/layoutStore';
 import { useTokenStore } from '@/stores/tokenStore';
 import { usePhaseStore } from '@/stores/phaseStore';
 
-// The clearance node splits into a level chip and a name (D-263); the tooltip stays on the pill
-// that wraps both, so read it off the nearest ancestor carrying one.
-const tip = (): string => screen.getByText('POWERED FLIGHT').closest('[title]')?.getAttribute('title') ?? '';
+const tip = (): string => screen.getByText('Components').getAttribute('title') ?? '';
 
 beforeEach(() => {
   useTokenStore.getState().reset();

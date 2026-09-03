@@ -1,5 +1,4 @@
-/* studio.css — the three-panel console. Studio chrome only; never a user token (D-142).
-   Repainted to the station palette by ALT_GAL_REBRAND.md §E (D-259, D-264). */
+/* studio.css — the three-panel shell. Studio chrome only; never a user token (D-142). */
 
 .alt-studio {
   display: grid;
@@ -37,19 +36,15 @@
   padding: 0;
 }
 .alt-panel__title {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--wt-med);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-muted);
+  font-size: 13px;
+  font-weight: 600;
   margin: 0;
 }
 
 /* ---- phase bar ----------------------------------------------------------- */
 
 .alt-phasebar {
-  height: 48px;
+  height: 44px;
   display: grid;
   grid-template-columns: 200px 1fr 200px;
   align-items: center;
@@ -60,52 +55,24 @@
 .alt-phasebar__brand {
   display: flex;
   align-items: center;
+  gap: 7px;
+  font-size: 13px;
 }
-
-/* ---- the lockup (§C) ----------------------------------------------------- */
-
-.alt-lockup {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  color: var(--ink);
-}
-.alt-mark {
+.alt-pinwheel {
   flex: none;
-  color: var(--ink);
+  color: var(--studio-accent);
 }
-.alt-mark__payload {
-  fill: var(--signal);
-}
-.alt-wordmark {
-  font-family: var(--font-display);
-  font-size: 19px;
-  font-weight: var(--wt-bold);
-  letter-spacing: var(--track-tight);
-  line-height: 1;
-  color: var(--ink);
-}
-.alt-wordmark__dot {
-  display: inline-block;
-  width: 0.3em;
-  height: 0.3em;
-  margin: 0 0.07em;
-  background: var(--signal);
-  vertical-align: 0.02em;
-  border-radius: 1px;
+.alt-phasebar__brand .alt-mono {
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 .alt-phasebar__status {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--sp-3);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--wt-med);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  white-space: nowrap;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--studio-text-muted);
 }
 .alt-source {
   display: inline-flex;
@@ -115,8 +82,8 @@
 .alt-source__dot {
   width: 6px;
   height: 6px;
-  border-radius: var(--r-1);
-  background: var(--rule-strong);
+  border-radius: 50%;
+  background: var(--studio-text-faint);
 }
 .alt-source[data-source='native'] .alt-source__dot {
   background: var(--studio-ok);
@@ -136,73 +103,43 @@
   display: flex;
   align-items: center;
 }
-/* §E: each stop is a square node carrying its clearance number, name beside it. */
 .alt-step__pill {
   display: inline-flex;
   align-items: center;
-  gap: var(--sp-2);
-  padding: 0 var(--sp-2);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--wt-med);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
-.alt-step__level {
-  display: inline-grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  flex: none;
-  border: 1.5px solid var(--rule-strong);
-  border-radius: var(--r-1);
-  background: var(--paper);
-  color: var(--ink-muted);
-  font-weight: var(--wt-bold);
-  letter-spacing: 0;
+  gap: 5px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--studio-text-faint);
   transition:
-    background-color var(--dur-ui) var(--ease-standard),
-    border-color var(--dur-ui) var(--ease-standard),
-    color var(--dur-ui) var(--ease-standard);
+    background-color 200ms ease,
+    color 200ms ease,
+    transform 200ms ease;
 }
-.alt-step__name {
-  white-space: nowrap;
+.alt-step[data-state='future'] .alt-step__pill {
+  border-color: var(--studio-border-strong);
 }
-/* Cleared: a small GO check, name recedes. */
-.alt-step[data-state='done'] .alt-step__level {
-  border-color: var(--go);
-  color: var(--go);
+.alt-step[data-state='done'] .alt-step__pill {
+  background: var(--studio-accent-soft);
+  color: var(--studio-accent);
 }
-.alt-step[data-state='done'] .alt-step__name {
-  color: var(--ink-muted);
-}
-/* Current: filled INK — 14.6:1 on cream, where the signal would only reach 3.7:1. */
-.alt-step[data-state='current'] .alt-step__level {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--paper-2);
-}
-.alt-step[data-state='current'] .alt-step__name {
-  color: var(--ink);
-  font-weight: var(--wt-bold);
-}
-/* Locked: outline only. */
-.alt-step[data-state='future'] .alt-step__level {
-  border-color: var(--rule);
-  color: var(--rule-strong);
-}
-.alt-step[data-state='future'] .alt-step__name {
-  color: var(--rule-strong);
+.alt-step[data-state='current'] .alt-step__pill {
+  background: var(--studio-accent);
+  color: var(--studio-on-accent);
+  font-weight: 600;
+  transform: scale(1);
 }
 .alt-step__rule {
-  width: 18px;
-  height: 1.5px;
-  background: var(--rule);
-  transition: background-color var(--dur-ui) var(--ease-standard);
+  width: 24px;
+  height: 1px;
+  background: var(--studio-border-strong);
+  transition: background-color 300ms ease;
 }
 .alt-step__rule[data-filled='true'] {
-  background: var(--go);
+  background: var(--studio-accent);
 }
 
 /* ---- canvas -------------------------------------------------------------- */
@@ -392,13 +329,6 @@
   border: 1px solid var(--studio-border);
   border-radius: 12px;
 }
-.alt-onboarding__title {
-  font-family: var(--font-display);
-  font-size: var(--fs-h2);
-  font-weight: var(--wt-bold);
-  color: var(--ink);
-  margin-bottom: var(--sp-1);
-}
 .alt-onboarding__body {
   font-size: 12px;
   color: var(--studio-text-muted);
@@ -467,65 +397,42 @@
 }
 .alt-log__entry {
   position: relative;
-  padding: var(--sp-2) var(--sp-3);
-  border-bottom: 1px solid var(--rule);
-  font-family: var(--font-mono);
-  font-size: var(--fs-log);
-  line-height: 1.5;
-  /* §H: a new line on the loop is frequent and low in novelty — the smallest possible motion. */
-  animation: alt-log-in var(--dur-snap) var(--ease-out);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--studio-border);
+  animation: alt-log-in 2s ease-out;
 }
 @keyframes alt-log-in {
   from {
-    opacity: 0;
-    transform: translateY(6px);
+    background: var(--studio-agent-soft);
   }
   to {
-    opacity: 1;
-    transform: none;
+    background: transparent;
   }
-}
-/* GAL speaks with an amber rail down the entry; the Director is flush left with none. */
-.alt-log__entry[data-tone='agent'] {
-  border-left: 2px solid var(--signal);
-  padding-left: calc(var(--sp-3) - 2px);
-}
-.alt-log__entry[data-tone='error'] {
-  border-left: 2px solid var(--abort);
-  padding-left: calc(var(--sp-3) - 2px);
-}
-.alt-log__entry[data-tone='undone'] {
-  border-left: 2px solid var(--rule-strong);
-  padding-left: calc(var(--sp-3) - 2px);
-}
-/* §E: callsign + colour carry authorship, so there is no avatar art and no dot. */
-.alt-log__callsign {
-  flex: none;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: var(--wt-bold);
-  letter-spacing: var(--track-label);
-  color: var(--ink);
-}
-.alt-log__entry[data-tone='agent'] .alt-log__callsign {
-  color: var(--signal-ink);
-}
-.alt-log__entry[data-tone='error'] .alt-log__callsign {
-  color: var(--abort);
-}
-.alt-log__entry[data-tone='undone'] .alt-log__callsign {
-  color: var(--ink-muted);
 }
 .alt-log__head {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-/* I-8: an inspector-driven call went through the host path a real agent uses, so the loop marks
-   it rather than implying GAL was there. */
-.alt-log__entry[data-source='inspector'] .alt-log__callsign::after {
-  content: '*';
-  color: var(--ink-muted);
+.alt-log__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--studio-agent);
+  flex: none;
+}
+.alt-log__entry[data-tone='human'] .alt-log__dot {
+  background: var(--studio-accent);
+}
+.alt-log__entry[data-tone='error'] .alt-log__dot {
+  background: var(--studio-err);
+}
+.alt-log__entry[data-tone='undone'] .alt-log__dot {
+  background: var(--studio-text-faint);
+}
+/* I-8: inspector-driven calls are the human's, so their dot reads as a human entry. */
+.alt-log__entry[data-source='inspector'] .alt-log__dot {
+  box-shadow: inset 0 0 0 2px var(--studio-bg);
 }
 
 .alt-log__entry[data-undone] .alt-log__tool {
@@ -536,10 +443,9 @@
   background: none;
   border: 0;
   padding: 0;
-  font-family: var(--font-mono);
-  font-size: var(--fs-log);
-  font-weight: var(--wt-med);
-  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--studio-text);
   cursor: pointer;
   text-align: left;
 }
@@ -549,14 +455,10 @@
   letter-spacing: 0.06em;
   color: var(--studio-text-faint);
 }
-/* §E: mission-elapsed, right-aligned — T+00:14:22, never wall clock. */
 .alt-log__time {
   margin-left: auto;
-  flex: none;
-  font-family: var(--font-mono);
-  font-size: var(--fs-micro);
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-muted);
+  font-size: 11px;
+  color: var(--studio-text-faint);
 }
 .alt-log__input {
   margin-top: 4px;
@@ -579,12 +481,11 @@
   color: var(--studio-err);
 }
 .alt-log__well {
-  margin-top: var(--sp-2);
-  padding: var(--sp-2);
-  background: var(--paper-sunk);
-  border: var(--border);
-  border-radius: var(--r-1);
-  font-size: var(--fs-micro);
+  margin-top: 8px;
+  padding: 10px;
+  background: var(--studio-surface);
+  border-radius: 6px;
+  font-size: 11px;
   overflow-x: auto;
   white-space: pre;
 }
@@ -601,15 +502,13 @@
 }
 .alt-log__new {
   align-self: center;
-  margin: var(--sp-2);
-  padding: var(--sp-1) var(--sp-3);
-  border-radius: var(--r-1);
-  border: 1px solid var(--signal);
-  background: var(--paper-2);
-  color: var(--signal-ink);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: var(--track-label);
+  margin: 8px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--studio-accent);
+  background: var(--studio-accent-soft);
+  color: var(--studio-accent);
+  font-size: 11px;
   cursor: pointer;
 }
 .alt-log__empty {
@@ -662,7 +561,7 @@
   border-left: 3px solid var(--studio-text-faint);
   border-radius: var(--studio-radius);
   font-size: 12px;
-  border: var(--border-strong);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 .alt-toast[data-tone='agent'] {
   border-left-color: var(--studio-agent);

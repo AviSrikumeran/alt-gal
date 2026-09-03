@@ -5,14 +5,13 @@ import { nextPhaseFrom, usePhaseStore } from '@/stores/phaseStore';
 import { useTokenStore } from '@/stores/tokenStore';
 import { useWebMCPStatusStore } from '@/stores/webmcpStatusStore';
 import { ALL_TOOL_NAMES } from '@/webmcp/toolPhaseMap';
-import StationLockup from './StationMark';
-import { clearance, PHASE_STEPS, S } from './strings';
+import Pinwheel from './Pinwheel';
+import { PHASE_STEPS, S, WORDMARK } from './strings';
 
 /**
- * The station masthead (ALT_GAL_REBRAND.md §E, D-263). Mission patch and wordmark on the left, the
- * clearance ladder across the middle, station status on the right. The systems count is still read
- * back from `getTools()` (D-016) and never tracked by hand — the number on the console is the
- * browser's answer, not ours; the rebrand only changes how it is spoken.
+ * D-153, D-254. Pinwheel mark, wordmark, the five-step stepper, and the live tool count read back from `getTools()`
+ * (D-016) — the count is never tracked by hand, which is the whole point: the number the human
+ * sees is the browser's answer, not ours.
  */
 export default function PhaseIndicator() {
   const phase = usePhaseStore((s) => s.currentPhase);
@@ -31,7 +30,8 @@ export default function PhaseIndicator() {
   return (
     <header className="alt-phasebar" role="banner">
       <div className="alt-phasebar__brand">
-        <StationLockup />
+        <Pinwheel />
+        <span className="alt-mono">{WORDMARK}</span>
       </div>
 
       <ol className="alt-stepper" aria-label="Phase">
@@ -50,16 +50,12 @@ export default function PhaseIndicator() {
               aria-current={state === 'current' ? 'step' : undefined}
             >
               <span className="alt-step__pill" title={tip}>
-                <span className="alt-step__level" aria-hidden="true">
-                  {state === 'done' ? (
-                    <svg width="10" height="10" viewBox="0 0 10 10">
-                      <path d="M1.5 5.2l2.2 2.2L8.5 2.6" fill="none" stroke="currentColor" strokeWidth="1.8" />
-                    </svg>
-                  ) : (
-                    clearance(i)
-                  )}
-                </span>
-                <span className="alt-step__name">{name}</span>
+                {state === 'done' && (
+                  <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                    <path d="M1.5 5.2l2.2 2.2L8.5 2.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                  </svg>
+                )}
+                {name}
               </span>
               {i < PHASE_STEPS.length - 1 && (
                 <span className="alt-step__rule" data-filled={i < phase} aria-hidden="true" />

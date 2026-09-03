@@ -7,7 +7,7 @@ import StudioShell from '@/components/studio/StudioShell';
 export default function Home() {
   return (
     <>
-      <h1 className="alt-sr">alt.gal — a ground station for design systems</h1>
+      <h1 className="alt-sr">Alternative Galaxy — design systems for humans and agents</h1>
       <StudioShell />
     </>
   );
